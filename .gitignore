@@ -86,7 +86,7 @@ models/*
 !models/.gitkeep
 
 # Audio files (these seem to be test files)
-*.mp3
+# *.mp3  # Commented out to allow MP3 files
 *.wav
 *.ogg
 
