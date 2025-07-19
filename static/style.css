@@ -1,0 +1,340 @@
+/* Custom CSS for CSV ML Analyzer - Synthwnced */
+
+/* Enhanced Cloud System */
+.cloud-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+}
+
+/* Cloud Formation 1 */
+.cloud-field::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 80px;
+    background: 
+        /* Large cloud formation */
+        radial-gradient(ellipse 60px 35px at 15% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 70%),
+        radial-gradient(ellipse 80px 45px at 35% 40%, rgba(255, 255, 255, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 70px 40px at 55% 55%, rgba(255, 255, 255, 0.19) 0%, transparent 70%),
+        radial-gradient(ellipse 65px 38px at 75% 45%, rgba(255, 255, 255, 0.17) 0%, transparent 70%),
+        radial-gradient(ellipse 50px 30px at 90% 50%, rgba(255, 255, 255, 0.16) 0%, transparent 70%),
+        /* Base cloud body */
+        radial-gradient(ellipse 180px 60px at 50% 60%, rgba(255, 255, 255, 0.12) 0%, transparent 100%);
+    top: 35%;
+    left: -350px;
+    border-radius: 60px;
+    filter: blur(1.5px);
+    animation: cloudDrift1 45s linear infinite;
+}
+
+/* Cloud Formation 2 */
+.cloud-field::after {
+    content: '';
+    position: absolute;
+    width: 250px;
+    height: 70px;
+    background: 
+        /* Medium cloud formation */
+        radial-gradient(ellipse 50px 28px at 20% 55%, rgba(255, 255, 255, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 65px 35px at 45% 45%, rgba(255, 255, 255, 0.16) 0%, transparent 70%),
+        radial-gradient(ellipse 55px 32px at 70% 50%, rgba(255, 255, 255, 0.17) 0%, transparent 70%),
+        radial-gradient(ellipse 45px 25px at 85% 48%, rgba(255, 255, 255, 0.15) 0%, transparent 70%),
+        /* Base cloud body */
+        radial-gradient(ellipse 150px 50px at 50% 65%, rgba(255, 255, 255, 0.10) 0%, transparent 100%);
+    top: 45%;
+    left: -300px;
+    border-radius: 50px;
+    filter: blur(1.2px);
+    animation: cloudDrift2 60s linear infinite;
+}
+
+/* Additional Cloud Layers */
+.cloud-layer-extra {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -3;
+    overflow: hidden;
+}
+
+/* Cloud Formation 3 */
+.cloud-layer-extra::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 55px;
+    background: 
+        radial-gradient(ellipse 40px 22px at 25% 50%, rgba(255, 255, 255, 0.14) 0%, transparent 70%),
+        radial-gradient(ellipse 50px 28px at 50% 45%, rgba(255, 255, 255, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 45px 25px at 75% 52%, rgba(255, 255, 255, 0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 120px 40px at 50% 65%, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+    top: 30%;
+    left: -250px;
+    border-radius: 40px;
+    filter: blur(2px);
+    animation: cloudDrift3 75s linear infinite;
+}
+
+/* Cloud Formation 4 */
+.cloud-layer-extra::after {
+    content: '';
+    position: absolute;
+    width: 180px;
+    height: 50px;
+    background: 
+        radial-gradient(ellipse 35px 20px at 30% 48%, rgba(255, 255, 255, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 45px 25px at 65% 52%, rgba(255, 255, 255, 0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 100px 35px at 50% 68%, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
+    top: 50%;
+    left: -220px;
+    border-radius: 35px;
+    filter: blur(1.8px);
+    animation: cloudDrift4 90s linear infinite;
+}
+
+/* High Altitude Clouds */
+.high-clouds {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -4;
+    overflow: hidden;
+}
+
+.high-clouds::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 60px;
+    background: 
+        radial-gradient(ellipse 80px 25px at 20% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 100px 30px at 50% 48%, rgba(255, 255, 255, 0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 90px 28px at 80% 52%, rgba(255, 255, 255, 0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 250px 40px at 50% 65%, rgba(255, 255, 255, 0.04) 0%, transparent 100%);
+    top: 25%;
+    left: -450px;
+    border-radius: 50px;
+    filter: blur(3px);
+    animation: cloudDrift5 120s linear infinite;
+}
+
+.high-clouds::after {
+    content: '';
+    position: absolute;
+    width: 350px;
+    height: 45px;
+    background: 
+        radial-gradient(ellipse 70px 22px at 25% 50%, rgba(255, 255, 255, 0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 85px 25px at 65% 48%, rgba(255, 255, 255, 0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 200px 35px at 50% 68%, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+    top: 40%;
+    left: -400px;
+    border-radius: 45px;
+    filter: blur(2.5px);
+    animation: cloudDrift6 150s linear infinite;
+}
+
+/* Cloud Animation Keyframes */
+@keyframes cloudDrift1 {
+    0% { left: -350px; opacity: 0; transform: scale(0.8); }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: 100vw; opacity: 0; transform: scale(1.2); }
+}
+
+@keyframes cloudDrift2 {
+    0% { left: -300px; opacity: 0; transform: scale(1.1); }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { left: 100vw; opacity: 0; transform: scale(0.9); }
+}
+
+@keyframes cloudDrift3 {
+    0% { left: -250px; opacity: 0; transform: scale(0.9); }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 100vw; opacity: 0; transform: scale(1.1); }
+}
+
+@keyframes cloudDrift4 {
+    0% { left: -220px; opacity: 0; transform: scale(1.0); }
+    25% { opacity: 1; }
+    75% { opacity: 1; }
+    100% { left: 100vw; opacity: 0; transform: scale(1.0); }
+}
+
+@keyframes cloudDrift5 {
+    0% { left: -450px; opacity: 0; transform: scale(0.7); }
+    30% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { left: 100vw; opacity: 0; transform: scale(1.3); }
+}
+
+@keyframes cloudDrift6 {
+    0% { left: -400px; opacity: 0; transform: scale(0.8); }
+    35% { opacity: 1; }
+    65% { opacity: 1; }
+    100% { left: 100vw; opacity: 0; transform: scale(1.2); }
+}
+
+/* Additional styling for enhanced UI */
+.hero-section {
+    background: transparent; /* Let synthwave background show through */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+}
+
+.upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background-color: rgba(102, 126, 234, 0.05);
+}
+
+.model-card {
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.model-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.accuracy-badge {
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+}
+
+.data-table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.visualization-container {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.progress-indicator {
+    position: relative;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-indicator::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    to {
+        left: 100%;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .feature-card {
+        margin-bottom: 1rem;
+    }
+    
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: rgba(33, 37, 41, 0.95);
+        color: white;
+    }
+    
+    .table {
+        background: rgba(33, 37, 41, 0.95);
+        color: white;
+    }
+    
+    .form-control {
+        background-color: rgba(33, 37, 41, 0.8);
+        border-color: #495057;
+        color: white;
+    }
+    
+    .form-control:focus {
+        background-color: rgba(33, 37, 41, 0.9);
+        border-color: #667eea;
+        color: white;
+    }
+    
+    /* Fix for modal form labels in dark mode */
+    .modal .form-check-label {
+        color: #212529 !important;
+    }
+}
+
+/* Ensure form-check-labels are always visible */
+.form-check-label {
+    color: #212529 !important;
+    font-weight: 500;
+}

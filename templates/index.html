@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}Home - EZAUTO CSV ANALYST{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Hero Section -->
+        <div class="text-center text-white mb-5">
+            <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown holographic">
+                <i class="fas fa-chart-line me-3"></i>EZAUTO CSV ANALYST
+            </h1>
+            <p class="lead fs-4 animate__animated animate__fadeInUp animate__delay-1s" style="color: var(--neon-blue);">
+                Making Machine Learning Accessible to Everyone
+            </p>
+            <p class="fs-5 animate__animated animate__fadeInUp animate__delay-1s text-white-50">
+                Built by a Computer Science student at UWE Bristol to inspire fellow students and data enthusiasts
+            </p>
+            <div class="mt-4 animate__animated animate__fadeInUp animate__delay-2s">
+                <span class="badge bg-primary fs-6 me-2 pulse">Student-Built</span>
+                <span class="badge bg-success fs-6 me-2">Easy to Use</span>
+                <span class="badge bg-warning fs-6 me-2">Educational</span>
+                <span class="badge bg-info fs-6">Open Source</span>
+            </div>
+        </div>
+
+        <!-- Mission Statement -->
+        <div class="card glass mb-5">
+            <div class="card-body p-5 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="text-primary mb-4">
+                            <i class="fas fa-graduation-cap me-2"></i>My Mission
+                        </h2>
+                        <p class="lead text-white mb-4">
+                            "As a Computer Science student at UWE Bristol pursuing Machine Learning, I created EZAUTO CSV ANALYST to make data science accessible to everyone. I believe that powerful ML tools shouldn't be complex or intimidating."
+                        </p>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                    <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                                    <h6 class="text-primary">For Students</h6>
+                                    <p class="small text-white-50 mb-0">Learn ML concepts through practical application</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-success bg-opacity-10 p-3 rounded">
+                                    <i class="fas fa-microscope fa-2x text-success mb-2"></i>
+                                    <h6 class="text-success">For Researchers</h6>
+                                    <p class="small text-white-50 mb-0">Quick prototyping and data exploration</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                    <i class="fas fa-heart fa-2x text-warning mb-2"></i>
+                                    <h6 class="text-warning">For Everyone</h6>
+                                    <p class="small text-white-50 mb-0">No coding required - just upload and analyze</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="card glass mb-5">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-5 text-primary">
+                    <i class="fas fa-star me-2"></i>What Makes EZAUTO Special?
+                </h2>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center feature-card h-100 p-4 rounded">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-upload fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="fw-bold text-primary">Simple Upload</h4>
+                            <p class="text-white-50">Just drag & drop your CSV file. No technical setup required - start analyzing immediately.</p>
+                            <div class="feature-badge">
+                                <span class="badge bg-primary">Instant</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center feature-card h-100 p-4 rounded">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-robot fa-3x text-success"></i>
+                            </div>
+                            <h4 class="fw-bold text-success">Auto ML Training</h4>
+                            <p class="text-white-50">Smart model recommendations based on your data. Multiple algorithms with detailed explanations.</p>
+                            <div class="feature-badge">
+                                <span class="badge bg-success">Smart</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center feature-card h-100 p-4 rounded">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-chart-bar fa-3x text-warning"></i>
+                            </div>
+                            <h4 class="fw-bold text-warning">Rich Visualizations</h4>
+                            <p class="text-white-50">Beautiful charts, correlation matrices, and model performance graphs that tell your data's story.</p>
+                            <div class="feature-badge">
+                                <span class="badge bg-warning">Visual</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center feature-card h-100 p-4 rounded">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-graduation-cap fa-3x text-info"></i>
+                            </div>
+                            <h4 class="fw-bold text-info">Learn While Doing</h4>
+                            <p class="text-white-50">Every result comes with explanations. Understand what your models are doing and why.</p>
+                            <div class="feature-badge">
+                                <span class="badge bg-info">Educational</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    {% if not session.user_id %}
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-3 pulse">
+                            <i class="fas fa-rocket me-2"></i>Start Your Journey
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg pulse">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Supported Models -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card glass">
+                    <div class="card-body p-5">
+                        <h3 class="text-center mb-4 text-primary">
+                            <i class="fas fa-cogs me-2"></i>Powerful ML Algorithms Made Simple
+                        </h3>
+                        <p class="text-center text-white-50 mb-4">
+                            Choose from industry-standard algorithms, each with detailed explanations and performance metrics.
+                        </p>
+                        <div class="row g-4">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="text-center p-3 rounded bg-primary bg-opacity-10">
+                                    <i class="fas fa-line-chart fa-2x text-primary mb-2"></i>
+                                    <h5 class="text-primary">Linear Regression</h5>
+                                    <p class="text-white-50 small">Perfect for predicting continuous values like prices, temperatures, or sales</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="text-center p-3 rounded bg-success bg-opacity-10">
+                                    <i class="fas fa-sitemap fa-2x text-success mb-2"></i>
+                                    <h5 class="text-success">Logistic Regression</h5>
+                                    <p class="text-white-50 small">Classify data into categories - spam detection, medical diagnosis, etc.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="text-center p-3 rounded bg-warning bg-opacity-10">
+                                    <i class="fas fa-tree fa-2x text-warning mb-2"></i>
+                                    <h5 class="text-warning">Random Forest</h5>
+                                    <p class="text-white-50 small">Powerful ensemble method that combines multiple decision trees</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="text-center p-3 rounded bg-info bg-opacity-10">
+                                    <i class="fas fa-vector-square fa-2x text-info mb-2"></i>
+                                    <h5 class="text-info">Support Vector Machine</h5>
+                                    <p class="text-white-50 small">Advanced classification with excellent performance on complex datasets</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="text-center p-3 rounded bg-secondary bg-opacity-10">
+                                    <i class="fas fa-magic fa-2x text-secondary mb-2"></i>
+                                    <h5 class="text-secondary">Auto Missing Value Handling</h5>
+                                    <p class="text-white-50 small">Smart data preprocessing with multiple strategies for missing data</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="card glass mb-5">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4 text-primary">
+                    <i class="fas fa-play-circle me-2"></i>Get Started in 3 Simple Steps
+                </h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <span class="fs-2 fw-bold text-white">1</span>
+                            </div>
+                            <h5 class="text-primary">Upload Your CSV</h5>
+                            <p class="text-white-50">Upload any CSV file with your data. No formatting required!</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <span class="fs-2 fw-bold text-white">2</span>
+                            </div>
+                            <h5 class="text-success">Choose Your Target</h5>
+                            <p class="text-white-50">Select what you want to predict. We'll recommend the best model!</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="bg-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <span class="fs-2 fw-bold text-white">3</span>
+                            </div>
+                            <h5 class="text-warning">Get Insights</h5>
+                            <p class="text-white-50">View beautiful visualizations and understand your model's performance!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card glass">
+            <div class="card-body p-5">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h3 class="text-primary mb-4">
+                            <i class="fas fa-envelope me-2"></i>Get in Touch
+                        </h3>
+                        <p class="lead text-white mb-4">
+                            Have questions, suggestions, or want to collaborate? I'd love to hear from fellow data enthusiasts!
+                        </p>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-primary rounded-circle p-3 me-3">
+                                        <i class="fas fa-user fa-lg text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-primary mb-1">Developer</h6>
+                                        <p class="text-white mb-0">Nicholas Neate</p>
+                                        <small class="text-white-50">Computer Science Student, UWE Bristol</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-success rounded-circle p-3 me-3">
+                                        <i class="fas fa-envelope fa-lg text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-success mb-1">Email</h6>
+                                        <a href="mailto:Nicholas2.Neate@live.uwe.ac.uk" class="text-white text-decoration-none">
+                                            Nicholas2.Neate@live.uwe.ac.uk
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-warning rounded-circle p-3 me-3">
+                                        <i class="fas fa-phone fa-lg text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-warning mb-1">Phone</h6>
+                                        <a href="tel:07453252183" class="text-white text-decoration-none">
+                                            07453 252 183
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-info rounded-circle p-3 me-3">
+                                        <i class="fas fa-map-marker-alt fa-lg text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-info mb-1">Location</h6>
+                                        <p class="text-white mb-0">Bristol, Fishponds</p>
+                                        <small class="text-white-50">United Kingdom</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="bg-primary bg-opacity-10 p-4 rounded h-100 d-flex flex-column justify-content-center">
+                            <div class="text-center">
+                                <i class="fas fa-university fa-3x text-primary mb-3"></i>
+                                <h5 class="text-primary">University of the West of England</h5>
+                                <p class="text-white-50 mb-3">Computer Science with Machine Learning Path</p>
+                                <p class="small text-white-50 mb-4">
+                                    "Passionate about making machine learning accessible to everyone. 
+                                    This project represents my commitment to educational technology and open-source development."
+                                </p>
+                                <div class="d-flex justify-content-center">
+                                    <span class="badge bg-primary me-2">Student Developer</span>
+                                    <span class="badge bg-success">Open Source</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4 pt-4 border-top border-secondary">
+                    <p class="text-white-50 small mb-0">
+                        <i class="fas fa-heart text-danger me-1"></i>
+                        Built with passion for data science education | © 2025 Nicholas Neate | EZAUTO CSV ANALYST
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

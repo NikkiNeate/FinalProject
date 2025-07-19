@@ -1,0 +1,1063 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CSV ML Analyzer{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-white display-4 fw-bold">
+                <i class="fas fa-tachometer-alt me-3 pulse"></i>Dashboard
+            </h1>
+            <button class="btn btn-primary btn-lg pulse" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="fas fa-upload me-2"></i>Upload CSV
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center glass">
+            <div class="card-body">
+                <div class="d-flex justify-content-center align-items-center mb-3">
+                    <div class="bg-primary bg-gradient rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-database fa-lg text-white"></i>
+                    </div>
+                </div>
+                <h3 class="card-title display-6 fw-bold text-primary">{{ datasets|length }}</h3>
+                <p class="card-text text-muted fw-semibold">Datasets Uploaded</p>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ (datasets|length / 10) * 100 if datasets|length < 10 else 100 }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center glass">
+            <div class="card-body">
+                <div class="d-flex justify-content-center align-items-center mb-3">
+                    <div class="bg-success bg-gradient rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-robot fa-lg text-white"></i>
+                    </div>
+                </div>
+                <h3 class="card-title display-6 fw-bold text-success">{{ models|length }}</h3>
+                <p class="card-text text-muted fw-semibold">Models Trained</p>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ (models|length / 5) * 100 if models|length < 5 else 100 }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center glass">
+            <div class="card-body">
+                <div class="d-flex justify-content-center align-items-center mb-3">
+                    <div class="bg-warning bg-gradient rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-chart-line fa-lg text-white"></i>
+                    </div>
+                </div>
+                <h3 class="card-title display-6 fw-bold text-warning">
+                    {% if models and models|length > 0 %}
+                        {% set accuracies = models|selectattr('4', 'ne', none)|map(attribute='4')|list %}
+                        {{ "%.3f"|format(accuracies|max) if accuracies else "0.000" }}
+                    {% else %}
+                        0.000
+                    {% endif %}
+                </h3>
+                <p class="card-text text-muted">Best Model Accuracy</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Datasets Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-database me-2"></i>Your Datasets
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if datasets %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Filename</th>
+                                    <th>Upload Date</th>
+                                    <th>Size</th>
+                                    <th>Rows</th>
+                                    <th>Columns</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dataset in datasets %}
+                                <tr id="dataset-row-{{ dataset[0] }}">
+                                    <td>
+                                        <i class="fas fa-file-csv me-2 text-success"></i>
+                                        {{ dataset[1] }}
+                                    </td>
+                                    <td>{{ dataset[2] }}</td>
+                                    <td>{{ "%.2f"|format(dataset[3]/1024) }} KB</td>
+                                    <td>{{ dataset[4] }}</td>
+                                    <td>{{ dataset[5] }}</td>
+                                    <td>
+                                        <a href="{{ url_for('analyze_dataset', dataset_id=dataset[0]) }}" 
+                                           class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-chart-bar me-1"></i>Analyze
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-warning missing-values-btn me-1" 
+                                                data-dataset-id="{{ dataset[0] }}" 
+                                                data-filename="{{ dataset[1] }}"
+                                                title="Handle Missing Values">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>Missing Values
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success train-model-btn me-1" 
+                                                data-dataset-id="{{ dataset[0] }}" 
+                                                data-filename="{{ dataset[1] }}">
+                                            <i class="fas fa-brain me-1"></i>Train Model
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger delete-dataset-btn" 
+                                                data-dataset-id="{{ dataset[0] }}" 
+                                                data-filename="{{ dataset[1] }}"
+                                                title="Delete Dataset">
+                                            <i class="fas fa-trash me-1"></i>Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-database fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No datasets uploaded yet</h5>
+                        <p class="text-muted">Upload your first CSV file to get started</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Models Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-robot me-2"></i>Your Trained Models
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if models %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Model Name</th>
+                                    <th>Type</th>
+                                    <th>Dataset</th>
+                                    <th>Target Column</th>
+                                    <th>Accuracy</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for model in models %}
+                                <tr id="model-row-{{ model[0] }}">
+                                    <td>
+                                        <i class="fas fa-brain me-2 text-primary"></i>
+                                        <a href="{{ url_for('model_details', model_id=model[0]) }}" 
+                                           class="text-decoration-none fw-bold">
+                                            {{ model[1] }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ model[2].replace('_', ' ').title() }}</span>
+                                    </td>
+                                    <td>{{ model[6] }}</td>
+                                    <td>{{ model[3] }}</td>
+                                    <td>
+                                        <span class="badge bg-success">{{ "%.4f"|format(model[4]) }}</span>
+                                    </td>
+                                    <td>{{ model[5] }}</td>
+                                    <td>
+                                        <a href="{{ url_for('model_details', model_id=model[0]) }}" 
+                                           class="btn btn-sm btn-outline-primary me-2"
+                                           title="View Model Details">
+                                            <i class="fas fa-eye me-1"></i>Details
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-danger delete-model-btn" 
+                                                data-model-id="{{ model[0] }}" 
+                                                data-model-name="{{ model[1] }}"
+                                                title="Delete Model">
+                                            <i class="fas fa-trash me-1"></i>Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-robot fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No models trained yet</h5>
+                        <p class="text-muted">Train your first model from the datasets above</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-upload me-2"></i>Upload CSV File
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Choose CSV File</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                        <div class="form-text">Only CSV files are supported (max 16MB)</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload me-2"></i>Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Train Model Modal -->
+<div class="modal fade" id="trainModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-brain me-2"></i>Train Model
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="trainForm">
+                    <input type="hidden" id="datasetId" name="dataset_id">
+                    
+                    <div class="mb-3">
+                        <label for="modelName" class="form-label">Model Name</label>
+                        <input type="text" class="form-control" id="modelName" name="model_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modelType" class="form-label">Model Type</label>
+                        <select class="form-control" id="modelType" name="model_type" required>
+                            <option value="">Select a model type</option>
+                            <option value="linear_regression">Linear Regression</option>
+                            <option value="logistic_regression">Logistic Regression</option>
+                            <option value="random_forest_regressor">Random Forest Regressor</option>
+                            <option value="random_forest_classifier">Random Forest Classifier</option>
+                            <option value="svm_classifier">SVM Classifier</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="targetColumn" class="form-label">Target Column</label>
+                        <select class="form-control" id="targetColumn" name="target_column" required>
+                            <option value="">First analyze the dataset to see columns</option>
+                        </select>
+                        <div class="form-text">The column you want to predict</div>
+                    </div>
+                </form>
+                
+                <div id="trainingProgress" class="d-none">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Training...</span>
+                        </div>
+                        <p class="mt-2">Training model... This may take a few moments.</p>
+                    </div>
+                </div>
+                
+                <div id="trainingResult" class="d-none">
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle me-2"></i>Model Training Complete!</h6>
+                        <div id="resultMessage"></div>
+                        <div id="detailedResults" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="trainBtn" onclick="trainModel()">
+                    <i class="fas fa-brain me-2"></i>Train Model
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Missing Values Modal -->
+<div class="modal fade" id="missingValuesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Handle Missing Values
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Missing Data Analysis:</strong> Choose how to handle missing values in your dataset. This will create a cleaned copy of your data.
+                </div>
+                
+                <div id="missingValuesContent">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Analyzing missing values...</span>
+                        </div>
+                        <p class="mt-2">Analyzing missing values...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" id="applyMissingValuesBtn" onclick="applyMissingValuesStrategies()" disabled>
+                    <i class="fas fa-magic me-2"></i>Apply Strategies
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Comparison Modal -->
+<div class="modal fade" id="comparisonModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-balance-scale me-2"></i>Model Performance Comparison
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Select Models to Compare</h6>
+                        {% if models and models|length > 0 %}
+                            {% for model in models %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="{{ model[0] }}" id="model{{ model[0] }}">
+                                <label class="form-check-label" for="model{{ model[0] }}">
+                                    {{ model[1] }} ({{ model[2]|replace('_', ' ')|title }})
+                                </label>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>No Models Available</strong><br>
+                                You need to train at least one model before you can compare models.
+                                <br><br>
+                                <small>💡 <strong>Tip:</strong> Upload a dataset and train some models first, then come back to compare their performance!</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <div id="comparisonResults">
+                            {% if models and models|length > 0 %}
+                                <p class="text-muted">Select models to compare their performance</p>
+                            {% else %}
+                                <div class="text-center text-muted">
+                                    <i class="fas fa-robot fa-3x mb-3"></i>
+                                    <h5>Ready to Compare Models!</h5>
+                                    <p>Train some models first, then return here to see detailed performance comparisons, insights, and recommendations.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                {% if models and models|length > 0 %}
+                <button type="button" class="btn btn-warning" onclick="compareModels()">
+                    Compare Selected Models
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-warning" disabled>
+                    Compare Selected Models
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openTrainModal(datasetId, filename) {
+    document.getElementById('datasetId').value = datasetId;
+    document.getElementById('modelName').value = filename.split('.')[0] + '_model';
+    
+    // Reset form
+    document.getElementById('trainingProgress').classList.add('d-none');
+    document.getElementById('trainingResult').classList.add('d-none');
+    document.getElementById('trainBtn').disabled = false;
+    
+    // Load columns for this dataset
+    fetch(`/get_dataset_columns/${datasetId}`)
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('targetColumn');
+            select.innerHTML = '<option value="">Select target column</option>';
+            if (data.columns) {
+                data.columns.forEach(col => {
+                    const option = document.createElement('option');
+                    option.value = col;
+                    option.textContent = col;
+                    select.appendChild(option);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error loading columns:', error);
+            document.getElementById('targetColumn').innerHTML = '<option value="">Error loading columns</option>';
+        });
+    
+    // Show modal
+    new bootstrap.Modal(document.getElementById('trainModal')).show();
+}
+
+function trainModel() {
+    const form = document.getElementById('trainForm');
+    const formData = new FormData(form);
+    
+    // Validate form with specific field checking
+    if (!formData.get('model_name')) {
+        alert('Please enter a model name');
+        return;
+    }
+    if (!formData.get('model_type')) {
+        alert('Please select a model type');
+        return;
+    }
+    if (!formData.get('target_column')) {
+        alert('Please select a target column');
+        return;
+    }
+    
+    // Show progress
+    document.getElementById('trainingProgress').classList.remove('d-none');
+    document.getElementById('trainBtn').disabled = true;
+    
+    // Prepare data
+    const data = {
+        dataset_id: parseInt(formData.get('dataset_id')),
+        model_name: formData.get('model_name'),
+        model_type: formData.get('model_type'),
+        target_column: formData.get('target_column')
+    };
+    
+    // Send request
+    fetch('/train_model', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('trainingProgress').classList.add('d-none');
+        
+        if (data.success) {
+            // Show basic message
+            document.getElementById('resultMessage').innerHTML = 
+                `<strong>${data.explanation.interpretation}</strong>`;
+            
+            // Show detailed explanation
+            const detailedHTML = `
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>📋 What This Model Does:</h6>
+                        <ul class="mb-2">
+                            <li><strong>Task:</strong> ${data.explanation.task}</li>
+                            <li><strong>Target:</strong> ${data.explanation.target}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>📊 Performance:</h6>
+                        <ul class="mb-2">
+                            ${Object.entries(data.explanation.additional_metrics).slice(0,3).map(([key, value]) => 
+                                `<li><strong>${key}:</strong> ${value}</li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <p><strong>${data.explanation.metric_meaning}</strong></p>
+                    ${data.explanation.example ? `<p><em>${data.explanation.example}</em></p>` : ''}
+                </div>
+            `;
+            
+            document.getElementById('detailedResults').innerHTML = detailedHTML;
+            document.getElementById('trainingResult').classList.remove('d-none');
+            
+            // Reload page after 4 seconds to show new model
+            setTimeout(() => {
+                location.reload();
+            }, 4000);
+        } else {
+            alert('Error training model: ' + (data.error || 'Unknown error'));
+            document.getElementById('trainBtn').disabled = false;
+        }
+    })
+    .catch(error => {
+        document.getElementById('trainingProgress').classList.add('d-none');
+        alert('Error training model: ' + error.message);
+        document.getElementById('trainBtn').disabled = false;
+    });
+}
+
+
+
+// Missing Values Functions
+let currentMissingDatasetId = null;
+
+function showMissingValuesModal(datasetId, filename) {
+    currentMissingDatasetId = datasetId;
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('missingValuesModal'));
+    modal.show();
+    
+    // Load missing values analysis
+    loadMissingValuesAnalysis(datasetId, filename);
+}
+
+function loadMissingValuesAnalysis(datasetId, filename) {
+    const content = document.getElementById('missingValuesContent');
+    
+    // Show loading state
+    content.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Analyzing missing values...</span>
+            </div>
+            <p class="mt-2">Analyzing missing values for "${filename}"...</p>
+        </div>
+    `;
+    
+    fetch(`/check_missing_values/${datasetId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Error analyzing dataset: ${data.error}
+                    </div>
+                `;
+                return;
+            }
+            
+            if (!data.has_missing) {
+                content.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Great news!</strong> This dataset has no missing values. You can proceed directly to model training.
+                    </div>
+                    <div class="text-center">
+                        <p class="text-muted">Total rows: ${data.total_rows}</p>
+                    </div>
+                `;
+                document.getElementById('applyMissingValuesBtn').disabled = true;
+                return;
+            }
+            
+            // Generate missing values interface
+            let html = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Missing Values Detected:</strong> ${data.missing_columns} columns have missing values out of ${data.total_rows} total rows.
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Column</th>
+                                <th>Missing Count</th>
+                                <th>Missing %</th>
+                                <th>Data Type</th>
+                                <th>Strategy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            for (const [column, info] of Object.entries(data.missing_details)) {
+                html += `
+                    <tr>
+                        <td><strong>${column}</strong></td>
+                        <td>${info.missing_count}</td>
+                        <td><span class="badge ${info.missing_percentage > 50 ? 'bg-danger' : info.missing_percentage > 20 ? 'bg-warning' : 'bg-info'}">${info.missing_percentage}%</span></td>
+                        <td><code>${info.data_type}</code></td>
+                        <td>
+                            <select class="form-select form-select-sm missing-strategy" data-column="${column}">
+                                <option value="">Choose strategy...</option>
+                                <option value="drop_rows">🗑️ Drop rows with missing values</option>
+                `;
+                
+                if (info.data_type === 'object') {
+                    html += `
+                        <option value="fill_unknown">❓ Fill with "Unknown"</option>
+                        <option value="fill_mode">📊 Fill with mode (${info.mode_value || 'N/A'})</option>
+                    `;
+                } else {
+                    html += `
+                        <option value="fill_mean">📈 Fill with mean (${info.mean_value || 'N/A'})</option>
+                        <option value="fill_median">📊 Fill with median (${info.median_value || 'N/A'})</option>
+                        <option value="fill_zero">0️⃣ Fill with 0</option>
+                    `;
+                }
+                
+                html += `
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-3">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Strategy Recommendations:</h6>
+                    <ul class="list-unstyled small text-muted">
+                        <li>• <strong>Drop rows:</strong> Best when missing data is minimal (&lt;5%)</li>
+                        <li>• <strong>Fill with mean/median:</strong> Good for numeric data with random missing values</li>
+                        <li>• <strong>Fill with mode:</strong> Best for categorical data</li>
+                        <li>• <strong>Fill with "Unknown":</strong> Safe option for categorical data</li>
+                    </ul>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+            document.getElementById('applyMissingValuesBtn').disabled = false;
+        })
+        .catch(error => {
+            content.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Error loading missing values analysis: ${error.message}
+                </div>
+            `;
+        });
+}
+
+function applyMissingValuesStrategies() {
+    if (!currentMissingDatasetId) {
+        alert('No dataset selected');
+        return;
+    }
+    
+    // Collect strategies
+    const strategies = {};
+    const strategySelects = document.querySelectorAll('.missing-strategy');
+    let hasValidStrategies = false;
+    
+    strategySelects.forEach(select => {
+        const column = select.dataset.column;
+        const strategy = select.value;
+        
+        if (strategy) {
+            strategies[column] = strategy;
+            hasValidStrategies = true;
+        }
+    });
+    
+    if (!hasValidStrategies) {
+        alert('Please select at least one strategy for handling missing values.');
+        return;
+    }
+    
+    // Show loading state
+    const button = document.getElementById('applyMissingValuesBtn');
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+    button.disabled = true;
+    
+    const data = {
+        dataset_id: currentMissingDatasetId,
+        strategies: strategies
+    };
+    
+    fetch('/handle_missing_values', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        button.innerHTML = '<i class="fas fa-magic me-2"></i>Apply Strategies';
+        button.disabled = false;
+        
+        if (data.success) {
+            // Show success message with details
+            let message = `Missing values handled successfully!\n\n`;
+            message += `• Original rows: ${data.original_rows}\n`;
+            message += `• Cleaned rows: ${data.cleaned_rows}\n`;
+            message += `• Rows removed: ${data.rows_removed}\n`;
+            message += `• Remaining missing values: ${data.remaining_missing}\n\n`;
+            message += `Processed columns:\n${data.processed_columns.join('\n')}`;
+            
+            alert(message);
+            
+            // Close modal and reload page
+            bootstrap.Modal.getInstance(document.getElementById('missingValuesModal')).hide();
+            location.reload();
+        } else {
+            alert('Error handling missing values: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        button.innerHTML = '<i class="fas fa-magic me-2"></i>Apply Strategies';
+        button.disabled = false;
+        alert('Error handling missing values: ' + error.message);
+    });
+}
+
+function compareModels() {
+    const selectedModels = [];
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="model"]');
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            selectedModels.push(parseInt(checkbox.value));
+        }
+    });
+    
+    if (selectedModels.length === 0) {
+        alert('Please select at least one model to compare');
+        return;
+    }
+    
+    // Show progress
+    document.getElementById('comparisonResults').innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+    
+    // Send request
+    fetch('/compare_models', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ model_ids: selectedModels })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Generate comparison table
+            let tableHTML = `
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+            `;
+            
+            // Add model headers
+            data.models.forEach(model => {
+                tableHTML += `<th>${model.name}</th>`;
+            });
+            
+            tableHTML += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Add rows for each metric
+            data.metrics.forEach(metric => {
+                tableHTML += `
+                    <tr>
+                        <td>${metric.name}</td>
+                `;
+                data.models.forEach(model => {
+                    const value = metric.values[model.id] !== undefined ? metric.values[model.id] : '-';
+                    tableHTML += `<td>${value}</td>`;
+                });
+                tableHTML += `</tr>`;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            // Add insights section if available
+            if (data.insights && data.insights.length > 0) {
+                tableHTML += `
+                    <div class="mt-4">
+                        <h6><i class="fas fa-lightbulb me-2"></i>Comparison Insights</h6>
+                        <div class="row">
+                `;
+                
+                data.insights.forEach(insight => {
+                    tableHTML += `
+                        <div class="col-md-6 mb-3">
+                            <div class="alert alert-${insight.type} d-flex align-items-center">
+                                <i class="fas fa-${insight.icon} me-2"></i>
+                                <div>
+                                    <strong>${insight.title}</strong><br>
+                                    <small>${insight.message}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                tableHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('comparisonResults').innerHTML = tableHTML;
+        } else {
+            document.getElementById('comparisonResults').innerHTML = '<p class="text-danger">Error loading comparison data</p>';
+        }
+    })
+    .catch(error => {
+        document.getElementById('comparisonResults').innerHTML = '<p class="text-danger">Error loading comparison data</p>';
+        console.error('Error:', error);
+    });
+}
+
+
+
+function deleteModel(modelId, modelName) {
+    // Show confirmation dialog
+    if (!confirm(`Are you sure you want to delete the model "${modelName}"?\n\nThis action cannot be undone.`)) {
+        return;
+    }
+    
+    // Find the button that was clicked
+    const button = document.querySelector(`[data-model-id="${modelId}"]`);
+    const originalHTML = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+    button.disabled = true;
+    
+    // Send delete request
+    fetch(`/delete_model/${modelId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the model row from the table
+            const modelRow = document.getElementById(`model-row-${modelId}`);
+            if (modelRow) {
+                modelRow.style.transition = 'opacity 0.3s ease';
+                modelRow.style.opacity = '0';
+                setTimeout(() => {
+                    modelRow.remove();
+                    
+                    // Check if there are any models left
+                    const tbody = document.querySelector('#modelsTable tbody');
+                    if (tbody && tbody.children.length === 0) {
+                        // Show "no models" message if this was the last model
+                        location.reload();
+                    }
+                }, 300);
+            }
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'alert alert-success alert-dismissible fade show';
+            successMessage.innerHTML = `
+                <strong>Success!</strong> Model "${modelName}" has been deleted.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            // Insert the message at the top of the page
+            const container = document.querySelector('.row');
+            container.insertBefore(successMessage, container.firstChild);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                if (successMessage.parentElement) {
+                    successMessage.remove();
+                }
+            }, 5000);
+        } else {
+            // Restore button and show error
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+            alert('Error deleting model: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        // Restore button and show error
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        alert('Error deleting model: ' + error.message);
+        console.error('Delete error:', error);
+    });
+}
+
+function deleteDataset(datasetId, filename) {
+    // Show confirmation dialog with warning about associated models
+    if (!confirm(`Are you sure you want to delete the dataset "${filename}"?\n\n⚠️ WARNING: This will also delete ALL trained models associated with this dataset!\n\nThis action cannot be undone.`)) {
+        return;
+    }
+    
+    // Find the button that was clicked
+    const button = document.querySelector(`[data-dataset-id="${datasetId}"].delete-dataset-btn`);
+    const originalHTML = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+    button.disabled = true;
+    
+    // Send delete request
+    fetch(`/delete_dataset/${datasetId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the dataset row from the table
+            const datasetRow = document.getElementById(`dataset-row-${datasetId}`);
+            if (datasetRow) {
+                datasetRow.style.transition = 'opacity 0.3s ease';
+                datasetRow.style.opacity = '0';
+                setTimeout(() => {
+                    datasetRow.remove();
+                    
+                    // Check if there are any datasets left
+                    const tbody = document.querySelector('#datasetsTable tbody');
+                    if (tbody && tbody.children.length === 0) {
+                        // Show "no datasets" message if this was the last dataset
+                        location.reload();
+                    }
+                }, 300);
+            }
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'alert alert-success alert-dismissible fade show';
+            successMessage.innerHTML = `
+                <strong>Success!</strong> ${data.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            // Insert the message at the top of the page
+            const container = document.querySelector('.row');
+            container.insertBefore(successMessage, container.firstChild);
+            
+            // Auto-dismiss after 7 seconds (longer for dataset deletions due to more info)
+            setTimeout(() => {
+                if (successMessage.parentElement) {
+                    successMessage.remove();
+                }
+            }, 7000);
+            
+            // Reload page after 2 seconds to update stats and model list
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        } else {
+            // Restore button and show error
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+            alert('Error deleting dataset: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        // Restore button and show error
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        alert('Error deleting dataset: ' + error.message);
+        console.error('Delete error:', error);
+    });
+}
+
+// Add event listeners when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners for train model buttons
+    document.querySelectorAll('.train-model-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const datasetId = this.dataset.datasetId;
+            const filename = this.dataset.filename;
+            openTrainModal(datasetId, filename);
+        });
+    });
+    
+    // Add event listeners for delete model buttons
+    document.querySelectorAll('.delete-model-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const modelId = this.dataset.modelId;
+            const modelName = this.dataset.modelName;
+            deleteModel(modelId, modelName);
+        });
+    });
+    
+    // Add event listeners for delete dataset buttons
+    document.querySelectorAll('.delete-dataset-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const datasetId = this.dataset.datasetId;
+            const filename = this.dataset.filename;
+            deleteDataset(datasetId, filename);
+        });
+    });
+    
+    // Add event listeners for missing values buttons
+    document.querySelectorAll('.missing-values-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const datasetId = this.dataset.datasetId;
+            const filename = this.dataset.filename;
+            showMissingValuesModal(datasetId, filename);
+        });
+    });
+});
+</script>
+{% endblock %}

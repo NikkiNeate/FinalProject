@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EZAUTO CSV ANALYST{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Retro Futuristic Color Palette */
+            --retro-magenta: #ff00ff;
+            --retro-cyan: #00ffff;
+            --retro-pink: #ff1493;
+            --retro-purple: #9400d3;
+            --retro-orange: #ff6600;
+            --retro-blue: #0080ff;
+            
+            /* Minimalist Dark Background */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #151520;
+            --bg-tertiary: #1a1a2e;
+            
+            /* Glass and transparency */
+            --glass-bg: rgba(20, 20, 40, 0.15);
+            --glass-border: rgba(255, 0, 255, 0.2);
+            
+            /* Typography */
+            --font-primary: 'Inter', sans-serif;
+            --font-retro: 'Orbitron', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: 
+                /* Retro Wave Sunset with Sun */
+                radial-gradient(circle at 50% 40%, 
+                    #ffaa00 8%,          /* Bright yellow sun */
+                    #ff6600 12%,         /* Orange sun border */
+                    transparent 15%
+                ),
+                /* Horizontal scan lines on sun */
+                repeating-linear-gradient(0deg,
+                    transparent 35%,
+                    transparent 36%,
+                    rgba(255, 170, 0, 0.3) 36.5%,
+                    rgba(255, 170, 0, 0.3) 37%,
+                    transparent 37.5%,
+                    transparent 45%
+                ),
+                /* Sunset gradient */
+                linear-gradient(180deg, 
+                    #1a0033 0%,          /* Deep purple night sky */
+                    #330066 15%,         /* Purple */
+                    #660099 30%,         /* Magenta */
+                    #ff0080 45%,         /* Hot pink */
+                    #ff6600 60%,         /* Orange */
+                    #ffaa00 75%,         /* Yellow */
+                    #ff6600 85%,         /* Orange fade */
+                    #330066 100%         /* Back to purple at bottom */
+                ),
+                /* Subtle gradient overlay for depth */
+                radial-gradient(circle at 50% 100%, 
+                    rgba(255, 0, 128, 0.3) 0%, 
+                    transparent 50%
+                );
+            font-family: var(--font-primary);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background-attachment: fixed;
+        }
+
+        /* Floating Clouds System */
+        .synthwave-clouds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .synthwave-clouds::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 60px;
+            background: 
+                /* Cloud shape using multiple radial gradients */
+                radial-gradient(ellipse 40px 25px at 20% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 50px 30px at 40% 40%, rgba(255, 255, 255, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 45px 28px at 60% 55%, rgba(255, 255, 255, 0.14) 0%, transparent 70%),
+                radial-gradient(ellipse 35px 22px at 80% 45%, rgba(255, 255, 255, 0.13) 0%, transparent 70%),
+                /* Base cloud body */
+                radial-gradient(ellipse 120px 40px at 50% 60%, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+            top: 15%;
+            left: -250px;
+            border-radius: 50px;
+            filter: blur(1px);
+            animation: cloudDrift1 60s linear infinite;
+        }
+
+        .synthwave-clouds::after {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 50px;
+            background: 
+                /* Second cloud formation */
+                radial-gradient(ellipse 35px 20px at 25% 60%, rgba(255, 255, 255, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 45px 25px at 50% 45%, rgba(255, 255, 255, 0.10) 0%, transparent 70%),
+                radial-gradient(ellipse 40px 23px at 75% 55%, rgba(255, 255, 255, 0.11) 0%, transparent 70%),
+                /* Base cloud body */
+                radial-gradient(ellipse 100px 35px at 50% 65%, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
+            top: 25%;
+            left: -200px;
+            border-radius: 40px;
+            filter: blur(0.8px);
+            animation: cloudDrift2 80s linear infinite;
+        }
+
+        @keyframes cloudDrift1 {
+            0% { 
+                left: -250px; 
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                left: 100vw; 
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes cloudDrift2 {
+            0% { 
+                left: -200px; 
+                opacity: 0;
+                transform: scale(1.1);
+            }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { 
+                left: 100vw; 
+                opacity: 0;
+                transform: scale(0.9);
+            }
+        }
+
+        /* Additional Cloud Layers */
+        .cloud-layer-2 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -3;
+            overflow: hidden;
+        }
+
+        .cloud-layer-2::before {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 40px;
+            background: 
+                radial-gradient(ellipse 30px 18px at 30% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 35px 20px at 70% 45%, rgba(255, 255, 255, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 80px 25px at 50% 60%, rgba(255, 255, 255, 0.04) 0%, transparent 100%);
+            top: 35%;
+            left: -180px;
+            border-radius: 30px;
+            filter: blur(1.5px);
+            animation: cloudDrift3 100s linear infinite;
+        }
+
+        .cloud-layer-2::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 35px;
+            background: 
+                radial-gradient(ellipse 25px 15px at 40% 55%, rgba(255, 255, 255, 0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 60px 20px at 50% 65%, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            top: 10%;
+            left: -150px;
+            border-radius: 25px;
+            filter: blur(2px);
+            animation: cloudDrift4 120s linear infinite;
+        }
+
+        @keyframes cloudDrift3 {
+            0% { left: -180px; opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { left: 100vw; opacity: 0; }
+        }
+
+        @keyframes cloudDrift4 {
+            0% { left: -150px; opacity: 0; }
+            25% { opacity: 1; }
+            75% { opacity: 1; }
+            100% { left: 100vw; opacity: 0; }
+        }
+
+
+
+        /* Heat Wave Distortion Effects */
+        .container-fluid::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                /* Atmospheric heat shimmer */
+                radial-gradient(ellipse at 50% 40%, 
+                    rgba(255, 170, 0, 0.2) 0%, 
+                    rgba(255, 100, 100, 0.12) 30%, 
+                    transparent 60%
+                );
+            z-index: -3;
+            pointer-events: none;
+            animation: 
+                heatWaveMovement 3s ease-in-out infinite, 
+                scanLineMovement 6s linear infinite, 
+                atmosphericShimmer 8s ease-in-out infinite,
+                heatDistortion 12s ease-in-out infinite;
+            opacity: 1;
+        }
+
+        @keyframes heatWaveMovement {
+            0%, 100% { 
+                transform: translateY(0px) skewX(0deg) scaleX(1) scaleY(1);
+                filter: blur(0px) hue-rotate(0deg);
+            }
+            25% { 
+                transform: translateY(-12px) skewX(1.2deg) scaleX(1.03) scaleY(0.98);
+                filter: blur(1.2px) hue-rotate(10deg);
+            }
+            50% { 
+                transform: translateY(6px) skewX(-0.8deg) scaleX(0.97) scaleY(1.02);
+                filter: blur(0.8px) hue-rotate(20deg);
+            }
+            75% { 
+                transform: translateY(-8px) skewX(0.9deg) scaleX(1.01) scaleY(0.99);
+                filter: blur(1px) hue-rotate(5deg);
+            }
+        }
+
+        @keyframes scanLineMovement {
+            0% { 
+                background-position: 0px 0px, 0px 0px, 0px 0px, 50% 40%; 
+                background-size: 60px auto, 100px auto, 80px auto, 100% 100%;
+            }
+            25% { 
+                background-position: 15px 20px, 25px -25px, 0px 50px, 50% 40%; 
+                background-size: 65px auto, 95px auto, 85px auto, 100% 100%;
+            }
+            50% { 
+                background-position: 30px 40px, 50px -50px, 0px 100px, 50% 40%; 
+                background-size: 55px auto, 105px auto, 75px auto, 100% 100%;
+            }
+            75% { 
+                background-position: 45px 60px, 75px -75px, 0px 150px, 50% 40%; 
+                background-size: 62px auto, 98px auto, 82px auto, 100% 100%;
+            }
+            100% { 
+                background-position: 60px 80px, 100px -100px, 0px 200px, 50% 40%; 
+                background-size: 60px auto, 100px auto, 80px auto, 100% 100%;
+            }
+        }
+
+        @keyframes heatDistortion {
+            0%, 100% { 
+                transform: translateY(0px) skewX(0deg) rotateZ(0deg);
+            }
+            16% { 
+                transform: translateY(-3px) skewX(0.3deg) rotateZ(0.1deg);
+            }
+            33% { 
+                transform: translateY(2px) skewX(-0.2deg) rotateZ(-0.1deg);
+            }
+            50% { 
+                transform: translateY(-1px) skewX(0.4deg) rotateZ(0.05deg);
+            }
+            66% { 
+                transform: translateY(3px) skewX(-0.3deg) rotateZ(-0.05deg);
+            }
+            83% { 
+                transform: translateY(-2px) skewX(0.2deg) rotateZ(0.08deg);
+            }
+        }
+
+        @keyframes atmosphericShimmer {
+            0% { opacity: 1; }
+            20% { opacity: 0.7; }
+            40% { opacity: 1.3; }
+            60% { opacity: 0.8; }
+            80% { opacity: 1.1; }
+            100% { opacity: 1; }
+        }
+
+        /* Starfield System */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -5;
+            overflow: hidden;
+        }
+
+        .starfield::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                /* Large bright stars */
+                radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.9) 1px, transparent 2px),
+                radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.8) 1px, transparent 2px),
+                radial-gradient(circle at 70% 25%, rgba(255, 255, 255, 0.7) 1px, transparent 2px),
+                radial-gradient(circle at 25% 35%, rgba(255, 255, 255, 0.9) 1px, transparent 2px),
+                radial-gradient(circle at 90% 40%, rgba(255, 255, 255, 0.6) 1px, transparent 2px),
+                radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.8) 1px, transparent 2px),
+                radial-gradient(circle at 60% 10%, rgba(255, 255, 255, 0.7) 1px, transparent 2px),
+                radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.9) 1px, transparent 2px),
+                /* Medium stars */
+                radial-gradient(circle at 30% 15%, rgba(255, 255, 255, 0.6) 0.5px, transparent 1px),
+                radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.5) 0.5px, transparent 1px),
+                radial-gradient(circle at 20% 45%, rgba(255, 255, 255, 0.7) 0.5px, transparent 1px),
+                radial-gradient(circle at 95% 20%, rgba(255, 255, 255, 0.6) 0.5px, transparent 1px),
+                radial-gradient(circle at 50% 8%, rgba(255, 255, 255, 0.5) 0.5px, transparent 1px),
+                radial-gradient(circle at 75% 18%, rgba(255, 255, 255, 0.6) 0.5px, transparent 1px),
+                /* Small distant stars */
+                radial-gradient(circle at 35% 12%, rgba(255, 255, 255, 0.4) 0.3px, transparent 0.8px),
+                radial-gradient(circle at 65% 22%, rgba(255, 255, 255, 0.3) 0.3px, transparent 0.8px),
+                radial-gradient(circle at 45% 18%, rgba(255, 255, 255, 0.4) 0.3px, transparent 0.8px),
+                radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.3) 0.3px, transparent 0.8px),
+                radial-gradient(circle at 12% 25%, rgba(255, 255, 255, 0.4) 0.3px, transparent 0.8px),
+                radial-gradient(circle at 55% 5%, rgba(255, 255, 255, 0.3) 0.3px, transparent 0.8px);
+            background-size: 100% 100%;
+            animation: starTwinkle 8s ease-in-out infinite;
+        }
+
+        .starfield::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                /* Colored nebula stars */
+                radial-gradient(circle at 22% 28%, rgba(255, 0, 255, 0.4) 1px, transparent 2px),
+                radial-gradient(circle at 78% 35%, rgba(0, 255, 255, 0.3) 1px, transparent 2px),
+                radial-gradient(circle at 45% 12%, rgba(255, 100, 200, 0.4) 1px, transparent 2px),
+                radial-gradient(circle at 92% 8%, rgba(100, 200, 255, 0.3) 1px, transparent 2px),
+                radial-gradient(circle at 8% 32%, rgba(255, 170, 0, 0.4) 1px, transparent 2px),
+                /* Micro stars */
+                radial-gradient(circle at 18% 38%, rgba(255, 255, 255, 0.2) 0.2px, transparent 0.5px),
+                radial-gradient(circle at 52% 15%, rgba(255, 255, 255, 0.2) 0.2px, transparent 0.5px),
+                radial-gradient(circle at 82% 25%, rgba(255, 255, 255, 0.2) 0.2px, transparent 0.5px),
+                radial-gradient(circle at 38% 5%, rgba(255, 255, 255, 0.2) 0.2px, transparent 0.5px),
+                radial-gradient(circle at 68% 35%, rgba(255, 255, 255, 0.2) 0.2px, transparent 0.5px);
+            background-size: 100% 100%;
+            animation: starShimmer 12s ease-in-out infinite;
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { 
+                opacity: 1; 
+                filter: brightness(1);
+            }
+            25% { 
+                opacity: 0.7; 
+                filter: brightness(1.2);
+            }
+            50% { 
+                opacity: 0.9; 
+                filter: brightness(0.8);
+            }
+            75% { 
+                opacity: 0.6; 
+                filter: brightness(1.1);
+            }
+        }
+
+        @keyframes starShimmer {
+            0%, 100% { 
+                opacity: 0.8; 
+                transform: scale(1);
+            }
+            33% { 
+                opacity: 0.5; 
+                transform: scale(1.1);
+            }
+            66% { 
+                opacity: 1; 
+                transform: scale(0.9);
+            }
+        }
+
+        /* Shooting Stars */
+        .shooting-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -4;
+            overflow: hidden;
+        }
+
+        .shooting-stars::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(255, 255, 255, 0.8) 20%,
+                rgba(255, 255, 255, 0.4) 60%,
+                transparent 100%
+            );
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            animation: shootingStar1 15s linear infinite;
+        }
+
+        .shooting-stars::after {
+            content: '';
+            position: absolute;
+            width: 1.5px;
+            height: 1.5px;
+            background: linear-gradient(90deg, 
+                rgba(0, 255, 255, 1) 0%, 
+                rgba(0, 255, 255, 0.6) 30%,
+                transparent 100%
+            );
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(0, 255, 255, 0.6);
+            animation: shootingStar2 20s linear infinite;
+        }
+
+        @keyframes shootingStar1 {
+            0% { 
+                top: 10%; 
+                left: -100px; 
+                opacity: 0;
+                transform: rotate(45deg) scale(0);
+            }
+            5% { 
+                opacity: 1;
+                transform: rotate(45deg) scale(1);
+            }
+            95% { 
+                opacity: 1;
+                transform: rotate(45deg) scale(1);
+            }
+            100% { 
+                top: 60%; 
+                left: 100vw; 
+                opacity: 0;
+                transform: rotate(45deg) scale(0);
+            }
+        }
+
+        @keyframes shootingStar2 {
+            0% { 
+                top: 5%; 
+                left: -80px; 
+                opacity: 0;
+                transform: rotate(30deg) scale(0);
+            }
+            8% { 
+                opacity: 1;
+                transform: rotate(30deg) scale(1);
+            }
+            92% { 
+                opacity: 1;
+                transform: rotate(30deg) scale(1);
+            }
+            100% { 
+                top: 70%; 
+                left: 100vw; 
+                opacity: 0;
+                transform: rotate(30deg) scale(0);
+            }
+        }
+
+        /* Floating Energy Particles */
+        .synthwave-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -4;
+            overflow: hidden;
+        }
+
+        .synthwave-particles::before {
+            content: '●';
+            position: absolute;
+            color: rgba(255, 0, 255, 0.6);
+            font-size: 4px;
+            animation: particle1 25s linear infinite;
+        }
+
+        .synthwave-particles::after {
+            content: '●';
+            position: absolute;
+            color: rgba(0, 255, 255, 0.4);
+            font-size: 3px;
+            animation: particle2 30s linear infinite;
+        }
+
+        @keyframes particle1 {
+            0% { 
+                left: 10%; 
+                top: 100%; 
+                transform: scale(0);
+            }
+            10% { transform: scale(1); }
+            90% { transform: scale(1); }
+            100% { 
+                left: 90%; 
+                top: -10%; 
+                transform: scale(0);
+            }
+        }
+
+        @keyframes particle2 {
+            0% { 
+                left: 80%; 
+                top: 100%; 
+                transform: scale(0);
+            }
+            15% { transform: scale(1); }
+            85% { transform: scale(1); }
+            100% { 
+                left: 20%; 
+                top: -10%; 
+                transform: scale(0);
+            }
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 0, 128, 0.3) 20%,
+                #ff0080 40%, 
+                #ff6600 50%, 
+                #ffaa00 60%, 
+                #ff6600 70%, 
+                #ff0080 80%,
+                rgba(255, 0, 128, 0.3) 90%,
+                transparent 100%
+            );
+            box-shadow: 
+                0 0 10px rgba(255, 0, 128, 0.8),
+                0 0 20px rgba(255, 0, 128, 0.4),
+                0 0 30px rgba(255, 0, 128, 0.2);
+            z-index: 1000;
+        }
+
+        /* Floating particles for atmosphere */
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { 
+                transform: translateY(-100px) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* Sun glow animation */
+        @keyframes sunGlow {
+            0%, 100% { 
+                filter: brightness(1) drop-shadow(0 0 20px rgba(255, 170, 0, 0.5));
+            }
+            50% { 
+                filter: brightness(1.1) drop-shadow(0 0 40px rgba(255, 170, 0, 0.8));
+            }
+        }
+
+        /* Enhanced Glass Morphism for Retro Wave */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            animation: glassShimmer 4s infinite;
+        }
+
+        @keyframes glassShimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Navigation - Retro Wave Style */
+        .navbar {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 1px 20px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-brand {
+            font-family: var(--font-retro);
+            font-weight: 700;
+            font-size: 1.6rem;
+            background: linear-gradient(45deg, var(--retro-magenta), var(--retro-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            text-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Cards - Retro Wave Style */
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(255, 255, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: cardShimmer 3s infinite;
+        }
+
+        @keyframes cardShimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Buttons - Retro Futuristic Minimal */
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-weight: 500;
+            font-family: var(--font-retro);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+            z-index: 0;
+        }
+
+        .btn:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--retro-magenta), var(--retro-purple));
+            color: white;
+            border: 1px solid var(--retro-magenta);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(255, 0, 255, 0.5);
+            background: linear-gradient(45deg, var(--retro-purple), var(--retro-magenta));
+            color: white;
+            border-color: var(--retro-magenta);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--retro-cyan), var(--retro-blue));
+            color: white;
+            border: 1px solid var(--retro-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.5);
+            background: linear-gradient(45deg, var(--retro-blue), var(--retro-cyan));
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, var(--retro-orange), #ffaa00);
+            color: white;
+            border: 1px solid var(--retro-orange);
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(255, 102, 0, 0.5);
+            color: white;
+        }
+
+        .btn-outline-primary {
+            border: 1px solid var(--retro-magenta);
+            color: var(--retro-magenta);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--retro-magenta);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(255, 0, 255, 0.4);
+        }
+
+        .btn-outline-success {
+            border: 1px solid var(--retro-cyan);
+            color: var(--retro-cyan);
+            background: transparent;
+        }
+
+        .btn-outline-success:hover {
+            background: var(--retro-cyan);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-warning {
+            border: 1px solid var(--retro-orange);
+            color: var(--retro-orange);
+            background: transparent;
+        }
+
+        .btn-outline-warning:hover {
+            background: var(--retro-orange);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-danger {
+            border: 1px solid var(--retro-pink);
+            color: var(--retro-pink);
+            background: transparent;
+        }
+
+        .btn-outline-danger:hover {
+            background: var(--retro-pink);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Music Toggle Button */
+        #musicToggle {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #musicToggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Dark Mode Toggle Button */
+        #darkModeToggle {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #darkModeToggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Dark Mode Styles */
+        body {
+            transition: 
+                background 2s cubic-bezier(0.4, 0.0, 0.2, 1),
+                background-color 2s cubic-bezier(0.4, 0.0, 0.2, 1),
+                background-image 2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        /* Smooth transition for all background elements */
+        body::before,
+        body::after {
+            transition: 
+                opacity 2s cubic-bezier(0.4, 0.0, 0.2, 1),
+                background 2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        /* Dark Mode Background - Deep Space Starry Night */
+        body.dark-mode {
+            background: 
+                /* Deep space gradient */
+                radial-gradient(ellipse at center, rgba(20, 0, 40, 1) 0%, rgba(5, 0, 15, 1) 100%),
+                /* Star field overlay */
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 160px 30px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 200px 60px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 240px 90px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 280px 20px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(2px 2px at 320px 70px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 360px 40px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 400px 80px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 440px 20px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 480px 60px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 520px 90px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 560px 30px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 600px 70px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 640px 40px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 680px 80px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 720px 20px, rgba(255, 255, 255, 0.6), transparent),
+                /* More scattered stars */
+                radial-gradient(1px 1px at 100px 100px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 300px 150px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 500px 50px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 700px 200px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 150px 250px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 450px 300px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 650px 120px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 80px 180px, rgba(255, 255, 255, 0.9), transparent),
+                /* Nebula clouds */
+                radial-gradient(ellipse 400px 200px at 30% 20%, rgba(100, 0, 200, 0.1) 0%, transparent 70%),
+                radial-gradient(ellipse 300px 150px at 70% 60%, rgba(200, 0, 100, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 250px at 50% 80%, rgba(0, 100, 200, 0.06) 0%, transparent 70%) !important;
+            background-size: 
+                100% 100%,
+                800px 600px, 800px 600px, 800px 600px, 800px 600px, 800px 600px,
+                800px 600px, 800px 600px, 800px 600px, 800px 600px, 800px 600px,
+                800px 600px, 800px 600px, 800px 600px, 800px 600px, 800px 600px,
+                800px 600px, 800px 600px, 800px 600px, 800px 600px,
+                800px 600px, 800px 600px, 800px 600px, 800px 600px, 800px 600px,
+                800px 600px, 800px 600px, 800px 600px,
+                100% 100%, 100% 100%, 100% 100% !important;
+            background-attachment: fixed !important;
+            animation: starTwinkle 8s ease-in-out infinite, nebulaFloat 20s ease-in-out infinite;
+            transition: 
+                background 3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background-image 3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        /* Dark Mode Moon */
+        body.dark-mode::before {
+            content: '';
+            position: fixed;
+            top: 20%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            background: 
+                /* Moon craters and surface details */
+                radial-gradient(circle at 30% 40%, rgba(200, 200, 200, 0.3) 8%, transparent 15%),
+                radial-gradient(circle at 60% 30%, rgba(180, 180, 180, 0.2) 5%, transparent 12%),
+                radial-gradient(circle at 45% 70%, rgba(160, 160, 160, 0.25) 6%, transparent 14%),
+                radial-gradient(circle at 80% 60%, rgba(190, 190, 190, 0.2) 4%, transparent 10%),
+                radial-gradient(circle at 20% 80%, rgba(170, 170, 170, 0.15) 3%, transparent 8%),
+                /* Main moon body */
+                radial-gradient(circle, 
+                    #f5f5f5 0%,          /* Bright center */
+                    #e8e8e8 30%,         /* Light gray */
+                    #d0d0d0 60%,         /* Medium gray */
+                    #b8b8b8 80%,         /* Darker edge */
+                    #a0a0a0 100%         /* Shadow edge */
+                );
+            border-radius: 50%;
+            z-index: -3;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: 
+                opacity 3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* Moon glow effect */
+            box-shadow: 
+                0 0 50px rgba(255, 255, 255, 0.3),
+                0 0 100px rgba(255, 255, 255, 0.1),
+                inset -20px -20px 30px rgba(0, 0, 0, 0.2);
+            animation: moonGlow 12s ease-in-out infinite;
+        }
+
+        /* Show moon only in dark mode */
+        body.dark-mode::before {
+            opacity: 0.9;
+            transform: scale(1);
+        }
+
+        @keyframes moonGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 50px rgba(255, 255, 255, 0.3),
+                    0 0 100px rgba(255, 255, 255, 0.1),
+                    inset -20px -20px 30px rgba(0, 0, 0, 0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 60px rgba(255, 255, 255, 0.4),
+                    0 0 120px rgba(255, 255, 255, 0.15),
+                    inset -25px -25px 35px rgba(0, 0, 0, 0.25);
+            }
+        }
+
+        /* Dark Mode Shooting Stars - White Color Override */
+        body.dark-mode .shooting-stars::before {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(255, 255, 255, 0.8) 20%,
+                rgba(255, 255, 255, 0.4) 60%,
+                transparent 100%
+            );
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+        }
+
+        body.dark-mode .shooting-stars::after {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(255, 255, 255, 0.6) 30%,
+                transparent 100%
+            );
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { 
+                opacity: 1;
+                filter: brightness(1);
+            }
+            25% { 
+                opacity: 0.8;
+                filter: brightness(1.2);
+            }
+            50% { 
+                opacity: 0.9;
+                filter: brightness(0.8);
+            }
+            75% { 
+                opacity: 1.1;
+                filter: brightness(1.1);
+            }
+        }
+
+        @keyframes nebulaFloat {
+            0%, 100% { 
+                background-position: 0% 0%, 20px 30px, 40px 70px, 90px 40px, 130px 80px, 160px 30px, 200px 60px, 240px 90px, 280px 20px, 320px 70px, 360px 40px, 400px 80px, 440px 20px, 480px 60px, 520px 90px, 560px 30px, 600px 70px, 640px 40px, 680px 80px, 720px 20px, 30% 20%, 70% 60%, 50% 80%;
+            }
+            50% { 
+                background-position: 0% 0%, 25px 35px, 45px 75px, 95px 45px, 135px 85px, 165px 35px, 205px 65px, 245px 95px, 285px 25px, 325px 75px, 365px 45px, 405px 85px, 445px 25px, 485px 65px, 525px 95px, 565px 35px, 605px 75px, 645px 45px, 685px 85px, 725px 25px, 35% 25%, 75% 65%, 55% 85%;
+            }
+        }
+
+        /* Transition overlay for smoother crossfade */
+        body::before {
+            transition: 
+                opacity 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                filter 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Smooth crossfade for dark mode transition */
+        body.dark-mode::before {
+            opacity: 0.3 !important;
+            filter: blur(0.5px) brightness(0.7) !important;
+            transition: 
+                opacity 3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                filter 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Pulse animation for when music is playing */
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            }
+        }
+
+        /* Audio visualization effect */
+        #musicToggle.playing {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        #musicToggle.playing::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 0, 255, 0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            animation: audioWave 1.5s ease-in-out infinite;
+        }
+
+        @keyframes audioWave {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 0.1;
+            }
+        }
+
+        /* Form Controls - Minimalist Retro */
+        .form-control, .form-select {
+            background: rgba(20, 20, 40, 0.4);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            padding: 12px 16px;
+            font-family: var(--font-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--retro-magenta);
+            box-shadow: 0 0 0 0.2rem rgba(255, 0, 255, 0.15);
+            background: rgba(20, 20, 40, 0.6);
+            color: #ffffff;
+            outline: none;
+        }
+
+        .form-select option {
+            background: var(--bg-secondary);
+            color: #ffffff;
+        }
+
+        /* Alerts - Retro Minimal */
+        .alert {
+            border-radius: 8px;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 0.5s ease;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: var(--retro-cyan);
+            color: var(--retro-cyan);
+        }
+
+        .alert-danger {
+            background: rgba(255, 20, 147, 0.1);
+            border-color: var(--retro-pink);
+            color: var(--retro-pink);
+        }
+
+        .alert-info {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: var(--retro-magenta);
+            color: var(--retro-magenta);
+        }
+
+        .alert-warning {
+            background: rgba(255, 102, 0, 0.1);
+            border-color: var(--retro-orange);
+            color: var(--retro-orange);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tables - Retro Wave Style */
+        .table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            backdrop-filter: blur(15px);
+        }
+
+        .table thead th {
+            background: linear-gradient(45deg, #ff0080, #ff6600, #ffaa00);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+            font-family: var(--font-retro);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.01);
+        }
+
+        .table tbody td {
+            padding: 12px 15px;
+            border: none;
+            color: #ffffff;
+        }
+
+        /* Progress Bars - Retro Style */
+        .progress {
+            background: rgba(20, 20, 40, 0.4);
+            border-radius: 6px;
+            height: 6px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+        }
+
+        .progress-bar {
+            border-radius: 6px;
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bg-primary .progress-bar,
+        .progress-bar.bg-primary {
+            background: linear-gradient(90deg, var(--retro-magenta), var(--retro-purple));
+        }
+
+        .bg-success .progress-bar,
+        .progress-bar.bg-success {
+            background: linear-gradient(90deg, var(--retro-cyan), var(--retro-blue));
+        }
+
+        .bg-warning .progress-bar,
+        .progress-bar.bg-warning {
+            background: linear-gradient(90deg, var(--retro-orange), #ffaa00);
+        }
+
+        /* Badges - Retro Minimal */
+        .badge {
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-weight: 500;
+            font-family: var(--font-retro);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            border: 1px solid currentColor;
+        }
+
+        .bg-primary {
+            background: linear-gradient(45deg, var(--retro-magenta), var(--retro-purple)) !important;
+            color: white !important;
+        }
+
+        .bg-success {
+            background: linear-gradient(45deg, var(--retro-cyan), var(--retro-blue)) !important;
+            color: white !important;
+        }
+
+        .bg-warning {
+            background: linear-gradient(45deg, var(--retro-orange), #ffaa00) !important;
+            color: white !important;
+        }
+
+        .bg-info {
+            background: linear-gradient(45deg, var(--retro-blue), var(--retro-cyan)) !important;
+            color: white !important;
+        }
+
+        /* Feature Cards - Minimalist Retro */
+        .feature-card {
+            background: rgba(20, 20, 40, 0.2);
+            border: 1px solid rgba(255, 0, 255, 0.15);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 0, 255, 0.05);
+            border-color: rgba(255, 0, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.2);
+        }
+
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        /* Text Colors - Retro */
+        .text-primary {
+            color: var(--retro-magenta) !important;
+        }
+
+        .text-success {
+            color: var(--retro-cyan) !important;
+        }
+
+        .text-warning {
+            color: var(--retro-orange) !important;
+        }
+
+        .text-info {
+            color: var(--retro-blue) !important;
+        }
+
+        .text-danger {
+            color: var(--retro-pink) !important;
+        }
+
+        /* Pulse Animation - Subtle */
+        .pulse {
+            animation: retro-pulse 2s infinite;
+        }
+
+        @keyframes retro-pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(255, 0, 255, 0);
+            }
+        }
+
+        /* Holographic Text Effect */
+        .holographic {
+            background: linear-gradient(45deg, var(--retro-magenta), var(--retro-cyan), var(--retro-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: holographic-shift 3s ease-in-out infinite;
+        }
+
+        @keyframes holographic-shift {
+            0%, 100% {
+                filter: hue-rotate(0deg);
+            }
+            50% {
+                filter: hue-rotate(180deg);
+            }
+        }
+
+        /* Custom Scrollbar - Retro */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--retro-magenta), var(--retro-cyan));
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--retro-cyan), var(--retro-purple));
+        }
+
+        /* Spinner - Retro */
+        .spinner-border {
+            border: 2px solid rgba(255, 0, 255, 0.2);
+            border-top-color: var(--retro-magenta);
+            animation: retro-spin 1s linear infinite;
+        }
+
+        @keyframes retro-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal Enhancements */
+        .modal-content {
+            background: rgba(20, 20, 40, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(255, 0, 255, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Text White Override */
+        .text-white {
+            color: #ffffff !important;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes hologramShift {
+            0%, 100% {
+                filter: hue-rotate(0deg);
+                background-position: 0% 50%;
+            }
+            50% {
+                filter: hue-rotate(180deg);
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Holographic Text Effect */
+        .holographic {
+            background: linear-gradient(45deg, var(--retro-magenta), var(--retro-cyan), var(--retro-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 400% 400%;
+            animation: hologramShift 3s ease-in-out infinite;
+        }
+
+        /* Sidebar - Retro Theme */
+        .sidebar {
+            background: rgba(20, 20, 40, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Plot Container - Retro Theme */
+        .plot-container {
+            background: rgba(20, 20, 40, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 0, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(255, 0, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="{{ url_for('static', filename='music.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Starfield Background -->
+    <div class="starfield"></div>
+    
+    <!-- Shooting Stars -->
+    <div class="shooting-stars"></div>
+    
+    <!-- Enhanced Cloud System -->
+    <div class="cloud-field"></div>
+    <div class="cloud-layer-extra"></div>
+    <div class="high-clouds"></div>
+    
+    <!-- Original Cloud Layers -->
+    <div class="synthwave-clouds"></div>
+    <div class="cloud-layer-2"></div>
+
+    <!-- Animated Background Particles -->
+    <div id="particles-bg"></div>
+    
+    <!-- Synthwave Energy Particles -->
+    <div class="synthwave-particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold holographic" href="{{ url_for('index') }}">
+                <i class="fas fa-chart-line me-2"></i>EZAUTO CSV ANALYST
+            </a>
+            
+            <!-- Background Music Toggle -->
+            <button id="musicToggle" class="btn btn-outline-primary btn-sm me-2" onclick="toggleMusic()" title="Toggle Background Music">
+                <i id="musicIcon" class="fas fa-volume-up"></i>
+            </button>
+            
+            <!-- Dark Mode Toggle -->
+            <button id="darkModeToggle" class="btn btn-outline-warning btn-sm me-3" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                <i id="darkModeIcon" class="fas fa-sun"></i>
+            </button>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: var(--neon-blue);">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if session.user_id %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('dashboard') }}" style="color: var(--neon-blue);">
+                                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('resources') }}" style="color: var(--neon-purple);">
+                                <i class="fas fa-graduation-cap me-1"></i>ML Resources
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link text-primary fw-semibold">
+                                <i class="fas fa-user-astronaut me-1"></i>Welcome, {{ session.username }}!
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary btn-sm mx-2" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('resources') }}" style="color: var(--neon-purple);">
+                                <i class="fas fa-graduation-cap me-1"></i>ML Resources
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary btn-sm mx-1" href="{{ url_for('login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary btn-sm mx-1" href="{{ url_for('register') }}">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mt-5 pt-5">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <script>
+        // AI Cyber Particle Animation System
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles-bg');
+            const particleCount = 100; // Increased for more cyber effect
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random size between 1px and 6px
+                const size = Math.random() * 5 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random horizontal position
+                particle.style.left = Math.random() * 100 + '%';
+                
+                // Random animation delay
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                
+                // Random animation duration
+                particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+
+            // Add Matrix-style code rain effect
+            createMatrixRain();
+        }
+
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixContainer = document.createElement('div');
+            matrixContainer.id = 'matrix-rain';
+            matrixContainer.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                pointer-events: none;
+                overflow: hidden;
+            `;
+            document.body.appendChild(matrixContainer);
+
+            const characters = '01AI∞§¤◊▲▼◆●○□■▪▫▬►◄↑↓←→';
+            const columns = Math.floor(window.innerWidth / 20);
+
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.style.cssText = `
+                    position: absolute;
+                    top: -100%;
+                    left: ${i * 20}px;
+                    color: rgba(0, 255, 65, 0.3);
+                    font-family: 'Courier New', monospace;
+                    font-size: 14px;
+                    animation: matrixFall ${Math.random() * 20 + 10}s linear infinite;
+                    animation-delay: ${Math.random() * 5}s;
+                `;
+                
+                let text = '';
+                for (let j = 0; j < 20; j++) {
+                    text += characters.charAt(Math.floor(Math.random() * characters.length)) + '<br>';
+                }
+                column.innerHTML = text;
+                
+                matrixContainer.appendChild(column);
+            }
+
+            // Add matrix fall animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes matrixFall {
+                    0% { transform: translateY(-100%); opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { transform: translateY(100vh); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Enhanced Button Interactions
+        function initButtonEffects() {
+            const buttons = document.querySelectorAll('.btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Ripple effect on click
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        }
+
+        // Smooth Card Hover Effects
+        function initCardEffects() {
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) rotateX(5deg)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) rotateX(0)';
+                });
+            });
+        }
+
+        // Form Field Focus Effects
+        function initFormEffects() {
+            const formControls = document.querySelectorAll('.form-control, .form-select');
+            
+            formControls.forEach(control => {
+                control.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                control.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+        }
+
+        // Loading Button States
+        function showLoading(button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading me-2"></span>Loading...';
+            button.disabled = true;
+            
+            // Store original text for restoration
+            button.setAttribute('data-original-text', originalText);
+        }
+
+        function hideLoading(button) {
+            const originalText = button.getAttribute('data-original-text');
+            if (originalText) {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                button.removeAttribute('data-original-text');
+            }
+        }
+
+        // Navbar Scroll Effect - Retro Wave Theme
+        function initNavbarEffect() {
+            const navbar = document.querySelector('.navbar');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.2)';
+                    navbar.style.boxShadow = '0 2px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.2)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.1)';
+                    navbar.style.boxShadow = '0 1px 20px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.1)';
+                }
+            });
+        }
+
+        // Initialize all effects when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            initButtonEffects();
+            initCardEffects();
+            initFormEffects();
+            initNavbarEffect();
+            
+            // Add stagger animation to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (index * 0.1) + 's';
+                card.classList.add('animate__animated', 'animate__fadeInUp');
+            });
+        });
+
+        // Expose loading functions globally for form submissions
+        window.showLoading = showLoading;
+        window.hideLoading = hideLoading;
+
+        // Background Music Control
+        let isPlaying = false;
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicToggle = document.getElementById('musicToggle');
+
+        // Set initial volume to low (20%)
+        backgroundMusic.volume = 0.2;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                musicIcon.className = 'fas fa-volume-mute';
+                musicToggle.classList.remove('btn-outline-primary');
+                musicToggle.classList.add('btn-outline-secondary');
+                musicToggle.title = 'Play Background Music';
+                isPlaying = false;
+            } else {
+                backgroundMusic.play().catch(error => {
+                    console.log('Audio play failed:', error);
+                    // Handle autoplay restrictions
+                    musicIcon.className = 'fas fa-volume-xmark';
+                    musicToggle.title = 'Click to enable music (browser policy)';
+                });
+                musicIcon.className = 'fas fa-volume-up';
+                musicToggle.classList.remove('btn-outline-secondary');
+                musicToggle.classList.add('btn-outline-primary');
+                musicToggle.title = 'Mute Background Music';
+                isPlaying = true;
+            }
+        }
+
+        // Handle successful audio play
+        backgroundMusic.addEventListener('play', () => {
+            musicIcon.className = 'fas fa-volume-up';
+            musicToggle.classList.remove('btn-outline-secondary');
+            musicToggle.classList.add('btn-outline-primary');
+            musicToggle.title = 'Mute Background Music';
+            isPlaying = true;
+        });
+
+        // Handle audio pause/end
+        backgroundMusic.addEventListener('pause', () => {
+            musicIcon.className = 'fas fa-volume-mute';
+            musicToggle.classList.remove('btn-outline-primary');
+            musicToggle.classList.add('btn-outline-secondary');
+            musicToggle.title = 'Play Background Music';
+            isPlaying = false;
+        });
+
+        // Add some visual feedback with glow effect when music is playing
+        backgroundMusic.addEventListener('play', () => {
+            musicToggle.style.boxShadow = '0 0 15px rgba(255, 0, 255, 0.6)';
+            musicToggle.style.animation = 'pulse 2s ease-in-out infinite';
+        });
+
+        backgroundMusic.addEventListener('pause', () => {
+            musicToggle.style.boxShadow = 'none';
+            musicToggle.style.animation = 'none';
+        });
+
+        // Try to start music automatically (if browser allows)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Don't auto-start music, let user choose
+            musicIcon.className = 'fas fa-volume-mute';
+            musicToggle.classList.add('btn-outline-secondary');
+            musicToggle.title = 'Play Background Music';
+        });
+
+        // Dark Mode Toggle Functionality with Persistence
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        // Initialize dark mode state on page load
+        function initializeDarkMode() {
+            const body = document.body;
+            console.log('Initializing dark mode. Saved state:', isDarkMode);
+            
+            if (isDarkMode) {
+                // Apply dark mode without animation on page load
+                body.classList.add('dark-mode');
+                darkModeIcon.className = 'fas fa-moon';
+                darkModeToggle.classList.remove('btn-outline-warning');
+                darkModeToggle.classList.add('btn-outline-info');
+                darkModeToggle.title = 'Switch to Sunset Mode';
+                darkModeToggle.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.6)';
+                darkModeToggle.style.animation = 'pulse 3s ease-in-out infinite';
+                
+                // Set dark mode music if no music preference is set
+                if (backgroundMusic.src.includes('music.mp3')) {
+                    backgroundMusic.src = "{{ url_for('static', filename='All For Nothing.mp3') }}";
+                }
+            } else {
+                // Apply sunset mode
+                body.classList.remove('dark-mode');
+                darkModeIcon.className = 'fas fa-sun';
+                darkModeToggle.classList.remove('btn-outline-info');
+                darkModeToggle.classList.add('btn-outline-warning');
+                darkModeToggle.title = 'Switch to Dark Mode';
+                darkModeToggle.style.boxShadow = 'none';
+                darkModeToggle.style.animation = 'none';
+                
+                // Set sunset music if no music preference is set
+                if (backgroundMusic.src.includes('All For Nothing.mp3')) {
+                    backgroundMusic.src = "{{ url_for('static', filename='music.mp3') }}";
+                }
+            }
+        }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            console.log('Dark mode toggle clicked! Current state:', isDarkMode);
+            
+            // Disable button during transition to prevent rapid clicking
+            darkModeToggle.disabled = true;
+            darkModeToggle.style.opacity = '0.7';
+            
+            // Store current music playing state
+            const wasPlaying = !backgroundMusic.paused;
+            const currentTime = backgroundMusic.currentTime;
+            
+            if (isDarkMode) {
+                // Switch to sunset mode
+                body.classList.remove('dark-mode');
+                darkModeIcon.className = 'fas fa-sun';
+                darkModeToggle.classList.remove('btn-outline-info');
+                darkModeToggle.classList.add('btn-outline-warning');
+                darkModeToggle.title = 'Switch to Dark Mode';
+                darkModeToggle.style.boxShadow = 'none';
+                darkModeToggle.style.animation = 'none';
+                isDarkMode = false;
+                
+                // Save preference to localStorage
+                localStorage.setItem('darkMode', 'false');
+                
+                // Change back to sunset music
+                if (wasPlaying) {
+                    backgroundMusic.pause();
+                }
+                backgroundMusic.src = "{{ url_for('static', filename='music.mp3') }}";
+                backgroundMusic.load();
+                if (wasPlaying) {
+                    backgroundMusic.play().catch(error => console.log('Audio play failed:', error));
+                }
+                
+                console.log('Switched to sunset mode');
+            } else {
+                // Switch to starry night mode
+                body.classList.add('dark-mode');
+                darkModeIcon.className = 'fas fa-moon';
+                darkModeToggle.classList.remove('btn-outline-warning');
+                darkModeToggle.classList.add('btn-outline-info');
+                darkModeToggle.title = 'Switch to Sunset Mode';
+                darkModeToggle.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.6)';
+                darkModeToggle.style.animation = 'pulse 3s ease-in-out infinite';
+                isDarkMode = true;
+                
+                // Save preference to localStorage
+                localStorage.setItem('darkMode', 'true');
+                
+                // Change to dark mode music
+                if (wasPlaying) {
+                    backgroundMusic.pause();
+                }
+                backgroundMusic.src = "{{ url_for('static', filename='All For Nothing.mp3') }}";
+                backgroundMusic.load();
+                if (wasPlaying) {
+                    backgroundMusic.play().catch(error => console.log('Audio play failed:', error));
+                }
+                
+                console.log('Switched to starry night mode');
+            }
+            
+            // Force a style recalculation and smooth transition
+            body.offsetHeight;
+            body.style.transform = 'translateZ(0)'; // Force hardware acceleration
+            
+            // Re-enable button after transition completes
+            setTimeout(() => {
+                darkModeToggle.disabled = false;
+                darkModeToggle.style.opacity = '1';
+            }, 3500); // Match the longest transition duration
+        }
+
+        // Add glow animation for dark mode button when active
+        function updateDarkModeButtonEffect() {
+            if (isDarkMode) {
+                darkModeToggle.style.animation = 'pulse 3s ease-in-out infinite';
+            } else {
+                darkModeToggle.style.animation = 'none';
+            }
+        }
+
+        // Initialize dark mode button
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded - initializing dark mode button and restoring preferences');
+            const darkModeButton = document.getElementById('darkModeToggle');
+            const darkModeIconElement = document.getElementById('darkModeIcon');
+            
+            if (darkModeButton && darkModeIconElement) {
+                console.log('Dark mode button found, initializing...');
+                // Initialize dark mode state from localStorage
+                initializeDarkMode();
+            } else {
+                console.error('Dark mode button or icon not found!');
+            }
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

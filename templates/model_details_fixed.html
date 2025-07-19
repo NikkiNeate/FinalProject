@@ -1,0 +1,710 @@
+{% extends "base.html" %}
+
+{% block title %}Model Details - {{ model_summary.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Model Summary Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">
+                        <i class="fas fa-robot me-2"></i>
+                        {{ model_summary.name }}
+                        <span class="badge bg-light text-dark ms-2">{{ model_summary.type.replace('_', ' ').title() }}</span>
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-info-circle me-2"></i>Model Information</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Model Type:</strong> {{ model_summary.model_type_details.name }}</li>
+                                <li><strong>Category:</strong> 
+                                    <span class="badge bg-info">{{ model_summary.model_type_details.category }}</span>
+                                </li>
+                                <li><strong>Target Column:</strong> {{ model_summary.target_column }}</li>
+                                <li><strong>Dataset:</strong> {{ model_summary.dataset_name }}</li>
+                                <li><strong>Created:</strong> {{ model_summary.created_at }}</li>
+                                <li><strong>Test Samples:</strong> {{ model_summary.test_samples }}</li>
+                                <li><strong>Total Features:</strong> {{ model_summary.features_count }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-chart-line me-2"></i>Performance Summary</h5>
+                            <div class="row">
+                                {% if 'accuracy' in detailed_metrics %}
+                                <div class="col-6">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h3 class="text-primary">{{ "%.3f"|format(detailed_metrics.accuracy) }}</h3>
+                                        <small>Accuracy</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if 'r2_score' in detailed_metrics %}
+                                <div class="col-6">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h3 class="text-success">{{ "%.3f"|format(detailed_metrics.r2_score) }}</h3>
+                                        <small>R² Score</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if 'f1_score' in detailed_metrics %}
+                                <div class="col-6 mt-2">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h3 class="text-info">{{ "%.3f"|format(detailed_metrics.f1_score) }}</h3>
+                                        <small>F1 Score</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if 'rmse' in detailed_metrics %}
+                                <div class="col-6 mt-2">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h3 class="text-warning">{{ "%.3f"|format(detailed_metrics.rmse) }}</h3>
+                                        <small>RMSE</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Description and Insights -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-brain me-2"></i>Model Algorithm Details</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ model_summary.model_type_details.description }}</p>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-thumbs-up me-2"></i>Strengths</h6>
+                            <ul class="list-unstyled">
+                                {% for strength in model_summary.model_type_details.strengths %}
+                                <li><i class="fas fa-check text-success me-2"></i>{{ strength }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-bullseye me-2"></i>Best Use Cases</h6>
+                            <ul class="list-unstyled">
+                                {% for use_case in model_summary.model_type_details.use_cases %}
+                                <li><i class="fas fa-arrow-right text-primary me-2"></i>{{ use_case }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-cogs me-2"></i>Training Info</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Training Samples:</strong> {{ model_summary.training_info.train_size }}</p>
+                    <p><strong>Test Samples:</strong> {{ model_summary.training_info.test_size }}</p>
+                    <p><strong>Split Ratio:</strong> 80/20</p>
+                    
+                    <h6 class="mt-3">Preprocessing Steps:</h6>
+                    <ul class="list-unstyled small">
+                        {% for step in model_summary.training_info.preprocessing %}
+                        <li><i class="fas fa-cog text-secondary me-2"></i>{{ step }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Data Insights -->
+    {% if advanced_analysis.data_insights %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-database me-2"></i>Dataset Analysis</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-box">
+                                <h3 class="text-primary">{{ advanced_analysis.data_insights.total_samples }}</h3>
+                                <p>Total Samples</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-box">
+                                <h3 class="text-info">{{ advanced_analysis.data_insights.feature_types.numerical }}</h3>
+                                <p>Numerical Features</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-box">
+                                <h3 class="text-warning">{{ advanced_analysis.data_insights.feature_types.categorical }}</h3>
+                                <p>Categorical Features</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-box">
+                                <h3 class="text-{{ 'success' if advanced_analysis.data_insights.missing_values == 0 else 'danger' }}">
+                                    {{ advanced_analysis.data_insights.missing_values }}
+                                </h3>
+                                <p>Missing Values</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if advanced_analysis.data_insights.target_distribution %}
+                    <div class="mt-4">
+                        <h6>Target Variable Distribution:</h6>
+                        <div class="row">
+                            {% for class, count in advanced_analysis.data_insights.target_distribution.items() %}
+                            <div class="col-md-3 col-sm-6 mb-2">
+                                <div class="bg-light p-2 rounded text-center">
+                                    <strong>{{ class }}</strong><br>
+                                    <span class="text-muted">{{ count }} samples</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Model Hyperparameters -->
+    {% if model_summary.hyperparameters %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-sliders-h me-2"></i>Model Hyperparameters</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for param, value in model_summary.hyperparameters.items() %}
+                        <div class="col-md-4 col-sm-6 mb-2">
+                            <div class="param-box">
+                                <strong>{{ param.replace('_', ' ').title() }}:</strong>
+                                <span class="text-muted">{{ value }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Feature Engineering Info -->
+    {% if model_summary.training_info.feature_engineering %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-tools me-2"></i>Feature Engineering</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for step in model_summary.training_info.feature_engineering %}
+                        <li class="mb-2">
+                            <i class="fas fa-wrench text-primary me-2"></i>{{ step }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Performance Insights -->
+    {% if advanced_analysis.performance_insights %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Performance Insights</h4>
+                </div>
+                <div class="card-body">
+                    {% if 'best_class' in advanced_analysis.performance_insights %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="insight-box bg-success-light">
+                                <h6><i class="fas fa-trophy text-success me-2"></i>Best Performing Class</h6>
+                                <p>{{ advanced_analysis.performance_insights.best_class }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="insight-box bg-warning-light">
+                                <h6><i class="fas fa-exclamation-triangle text-warning me-2"></i>Needs Improvement</h6>
+                                <p>{{ advanced_analysis.performance_insights.worst_class }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if 'prediction_confidence' in advanced_analysis.performance_insights and advanced_analysis.performance_insights.prediction_confidence %}
+                    <div class="mt-3">
+                        <h6>Average Prediction Confidence: 
+                            <span class="text-primary">{{ "%.1f"|format(advanced_analysis.performance_insights.prediction_confidence * 100) }}%</span>
+                        </h6>
+                    </div>
+                    {% endif %}
+                    
+                    {% if 'mean_residual' in advanced_analysis.performance_insights %}
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="stat-box">
+                                <h5 class="text-info">{{ "%.3f"|format(advanced_analysis.performance_insights.mean_residual) }}</h5>
+                                <p>Mean Residual</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-box">
+                                <h5 class="text-warning">{{ "%.3f"|format(advanced_analysis.performance_insights.residual_std) }}</h5>
+                                <p>Residual Std Dev</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-box">
+                                <h5 class="text-success">{{ "%.3f"|format(advanced_analysis.performance_insights.prediction_range.mean) }}</h5>
+                                <p>Mean Prediction</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Detailed Metrics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-chart-line me-2"></i>Detailed Performance Metrics</h4>
+                </div>
+                <div class="card-body">
+                    {% if 'accuracy' in detailed_metrics %}
+                    <!-- Classification Metrics -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>Accuracy</h5>
+                                <p class="h4 text-primary">{{ "%.4f"|format(detailed_metrics.accuracy) }}</p>
+                                <small>Overall correct predictions</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>Precision</h5>
+                                <p class="h4 text-success">{{ "%.4f"|format(detailed_metrics.precision) }}</p>
+                                <small>True positives / (True + False positives)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>Recall</h5>
+                                <p class="h4 text-info">{{ "%.4f"|format(detailed_metrics.recall) }}</p>
+                                <small>True positives / (True positives + False negatives)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>F1 Score</h5>
+                                <p class="h4 text-warning">{{ "%.4f"|format(detailed_metrics.f1_score) }}</p>
+                                <small>Harmonic mean of precision and recall</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% if 'auc' in detailed_metrics %}
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>AUC Score</h5>
+                                <p class="h4 text-danger">{{ "%.4f"|format(detailed_metrics.auc) }}</p>
+                                <small>Area Under ROC Curve</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if 'r2_score' in detailed_metrics %}
+                    <!-- Regression Metrics -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>R² Score</h5>
+                                <p class="h4 text-primary">{{ "%.4f"|format(detailed_metrics.r2_score) }}</p>
+                                <small>Coefficient of determination</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>RMSE</h5>
+                                <p class="h4 text-danger">{{ "%.4f"|format(detailed_metrics.rmse) }}</p>
+                                <small>Root Mean Squared Error</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>MAE</h5>
+                                <p class="h4 text-warning">{{ "%.4f"|format(detailed_metrics.mae) }}</p>
+                                <small>Mean Absolute Error</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>MSE</h5>
+                                <p class="h4 text-info">{{ "%.4f"|format(detailed_metrics.mse) }}</p>
+                                <small>Mean Squared Error</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Per-Class Metrics (for classification) -->
+    {% if 'per_class' in detailed_metrics %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-list me-2"></i>Per-Class Performance</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Class</th>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1-Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in range(detailed_metrics.per_class.classes|length) %}
+                                <tr>
+                                    <td><strong>{{ detailed_metrics.per_class.classes[i] }}</strong></td>
+                                    <td>{{ "%.3f"|format(detailed_metrics.per_class.precision[i]) }}</td>
+                                    <td>{{ "%.3f"|format(detailed_metrics.per_class.recall[i]) }}</td>
+                                    <td>{{ "%.3f"|format(detailed_metrics.per_class.f1_score[i]) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Feature Information -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-cogs me-2"></i>Feature Information</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Features:</strong> {{ model_summary.features_count }}</p>
+                    <p><strong>Sample Features:</strong></p>
+                    <div class="row">
+                        {% for feature in model_summary.feature_names %}
+                        <div class="col-md-4 col-sm-6">
+                            <span class="badge bg-secondary me-1 mb-1">{{ feature }}</span>
+                        </div>
+                        {% endfor %}
+                        {% if model_summary.features_count > 10 %}
+                        <div class="col-12">
+                            <small class="text-muted">... and {{ model_summary.features_count - 10 }} more features</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visualizations -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Model Visualizations</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Navigation tabs for different plots -->
+                    <ul class="nav nav-tabs" id="plotTabs" role="tablist">
+                        {% if 'confusion_matrix' in plots %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="confusion-tab" data-bs-toggle="tab" data-bs-target="#confusion" type="button" role="tab">
+                                Confusion Matrix
+                            </button>
+                        </li>
+                        {% endif %}
+                        {% if 'roc_curve' in plots %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="roc-tab" data-bs-toggle="tab" data-bs-target="#roc" type="button" role="tab">
+                                ROC Curve
+                            </button>
+                        </li>
+                        {% endif %}
+                        {% if 'classification_report' in plots %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report" type="button" role="tab">
+                                Classification Report
+                            </button>
+                        </li>
+                        {% endif %}
+                        {% if 'feature_importance' in plots %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="importance-tab" data-bs-toggle="tab" data-bs-target="#importance" type="button" role="tab">
+                                Feature Importance
+                            </button>
+                        </li>
+                        {% endif %}
+                        {% if 'regression_analysis' in plots %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="regression-tab" data-bs-toggle="tab" data-bs-target="#regression" type="button" role="tab">
+                                Regression Analysis
+                            </button>
+                        </li>
+                        {% endif %}
+                        {% if 'prediction_distribution' in plots %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="distribution-tab" data-bs-toggle="tab" data-bs-target="#distribution" type="button" role="tab">
+                                Predictions
+                            </button>
+                        </li>
+                        {% endif %}
+                    </ul>
+
+                    <!-- Tab content -->
+                    <div class="tab-content mt-3" id="plotTabContent">
+                        {% if 'confusion_matrix' in plots %}
+                        <div class="tab-pane fade show active" id="confusion" role="tabpanel">
+                            <h5>Confusion Matrix</h5>
+                            <p class="text-muted">Shows how well the model distinguishes between different classes. Diagonal elements represent correct predictions.</p>
+                            <div class="text-center">
+                                <img src="data:image/png;base64,{{ plots.confusion_matrix }}" class="img-fluid" alt="Confusion Matrix" style="max-height: 500px;">
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if 'roc_curve' in plots %}
+                        <div class="tab-pane fade" id="roc" role="tabpanel">
+                            <h5>ROC Curve</h5>
+                            <p class="text-muted">Receiver Operating Characteristic curve shows the trade-off between true positive rate and false positive rate.</p>
+                            <div class="text-center">
+                                <img src="data:image/png;base64,{{ plots.roc_curve }}" class="img-fluid" alt="ROC Curve" style="max-height: 500px;">
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if 'classification_report' in plots %}
+                        <div class="tab-pane fade" id="report" role="tabpanel">
+                            <h5>Classification Report Heatmap</h5>
+                            <p class="text-muted">Heatmap visualization of precision, recall, and F1-score for each class.</p>
+                            <div class="text-center">
+                                <img src="data:image/png;base64,{{ plots.classification_report }}" class="img-fluid" alt="Classification Report" style="max-height: 500px;">
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if 'feature_importance' in plots %}
+                        <div class="tab-pane fade" id="importance" role="tabpanel">
+                            <h5>Feature Importance</h5>
+                            <p class="text-muted">Shows which features are most important for the model's predictions.</p>
+                            <div class="text-center">
+                                <img src="data:image/png;base64,{{ plots.feature_importance }}" class="img-fluid" alt="Feature Importance" style="max-height: 500px;">
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if 'regression_analysis' in plots %}
+                        <div class="tab-pane fade show active" id="regression" role="tabpanel">
+                            <h5>Regression Analysis</h5>
+                            <p class="text-muted">Comprehensive analysis including predicted vs actual values, residuals, and distribution plots.</p>
+                            <div class="text-center">
+                                <img src="data:image/png;base64,{{ plots.regression_analysis }}" class="img-fluid" alt="Regression Analysis" style="max-height: 600px;">
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if 'prediction_distribution' in plots %}
+                        <div class="tab-pane fade" id="distribution" role="tabpanel">
+                            <h5>Prediction Distribution</h5>
+                            <p class="text-muted">Distribution of model predictions and confidence levels.</p>
+                            <div class="text-center">
+                                <img src="data:image/png;base64,{{ plots.prediction_distribution }}" class="img-fluid" alt="Prediction Distribution" style="max-height: 500px;">
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Dashboard -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.metric-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #007bff;
+}
+
+.metric-card h5 {
+    margin-bottom: 10px;
+    color: #495057;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.metric-card p {
+    margin-bottom: 5px;
+}
+
+.metric-card small {
+    color: #6c757d;
+    font-size: 11px;
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+    border: 1px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff;
+    border-color: #dee2e6 #dee2e6 #fff;
+    border-bottom-color: transparent;
+}
+
+.tab-content {
+    border: 1px solid rgba(255, 0, 255, 0.2);
+    border-top: none;
+    padding: 20px;
+    background: rgba(20, 20, 40, 0.4);
+    backdrop-filter: blur(15px);
+    border-radius: 0 0 0.375rem 0.375rem;
+    color: #ffffff;
+}
+
+/* New enhanced styling */
+.stat-box {
+    text-align: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-box h3, .stat-box h5 {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.stat-box p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.param-box {
+    background: rgba(248, 249, 250, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border-left: 3px solid #007bff;
+}
+
+.insight-box {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.bg-success-light {
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.bg-warning-light {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.card-header {
+    background: rgba(0, 123, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.list-unstyled li {
+    margin-bottom: 8px;
+}
+
+.badge {
+    font-size: 0.8em;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .stat-box {
+        margin-bottom: 10px;
+    }
+    
+    .metric-card {
+        margin-bottom: 10px;
+    }
+    
+    .param-box {
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+}
+</style>
+{% endblock %}

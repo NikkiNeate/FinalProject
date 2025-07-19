@@ -1,0 +1,394 @@
+{% extends "base.html" %}
+
+{% block title %}Analyze Dataset - CSV ML Analyzer{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-white">
+                <i class="fas fa-chart-bar me-3"></i>Analysis: {{ filename }}
+            </h1>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Dataset Overview -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-table fa-2x text-primary mb-2"></i>
+                <h4>{{ stats.shape[0] }}</h4>
+                <p class="text-muted">Rows</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-columns fa-2x text-success mb-2"></i>
+                <h4>{{ stats.shape[1] }}</h4>
+                <p class="text-muted">Columns</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                <h4>{{ stats.missing_values.values() | sum }}</h4>
+                <p class="text-muted">Missing Values</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-hashtag fa-2x text-info mb-2"></i>
+                <h4>
+                    {% set numeric_count = 0 %}
+                    {% for dtype in stats.dtypes.values() %}
+                        {% if 'int' in dtype or 'float' in dtype %}
+                            {% set numeric_count = numeric_count + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ numeric_count }}
+                </h4>
+                <p class="text-muted">Numeric Columns</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Column Information -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list me-2"></i>Columns & Data Types</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Missing</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for col in stats.columns %}
+                            <tr>
+                                <td>{{ col }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'primary' if 'int' in stats.dtypes[col] or 'float' in stats.dtypes[col] else 'secondary' }}">
+                                        {{ stats.dtypes[col] }}
+                                    </span>
+                                </td>
+                                <td>{{ stats.missing_values[col] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-robot me-2"></i>Train Model</h5>
+            </div>
+            <div class="card-body">
+                <form id="trainForm">
+                    <input type="hidden" name="dataset_id" value="{{ dataset_id }}">
+                    
+                    <div class="mb-3">
+                        <label for="modelName" class="form-label">Model Name</label>
+                        <input type="text" class="form-control" id="modelName" name="model_name" value="{{ filename.split('.')[0] }}_model" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modelType" class="form-label">Model Type</label>
+                        <select class="form-control" id="modelType" name="model_type" required>
+                            <option value="">Select a model type</option>
+                            <option value="linear_regression">Linear Regression</option>
+                            <option value="logistic_regression">Logistic Regression</option>
+                            <option value="random_forest_regressor">Random Forest Regressor</option>
+                            <option value="random_forest_classifier">Random Forest Classifier</option>
+                            <option value="svm_classifier">SVM Classifier</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="targetColumn" class="form-label">Target Column</label>
+                        <select class="form-control" id="targetColumn" name="target_column" required>
+                            <option value="">Select target column</option>
+                            {% for col in stats.columns %}
+                            <option value="{{ col }}">{{ col }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary w-100" onclick="trainModel()">
+                        <i class="fas fa-brain me-2"></i>Train Model
+                    </button>
+                </form>
+                
+                <div id="trainingProgress" class="d-none mt-3">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Training model...</p>
+                    </div>
+                </div>
+                
+                <div id="trainingResult" class="d-none mt-3">
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle me-2"></i>Model Training Complete!</h6>
+                        <div id="resultMessage"></div>
+                        <div id="detailedResults" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistical Summary -->
+{% if stats.description %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-calculator me-2"></i>Statistical Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Statistic</th>
+                                {% for col in stats.description.keys() %}
+                                <th>{{ col }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'] %}
+                            <tr>
+                                <td><strong>{{ stat }}</strong></td>
+                                {% for col in stats.description.keys() %}
+                                <td>
+                                    {% if stat in stats.description[col] %}
+                                        {{ "%.3f"|format(stats.description[col][stat]) }}
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Visualizations -->
+{% if plots %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-area me-2"></i>Data Visualizations & Insights</h5>
+            </div>
+            <div class="card-body">
+                
+                <!-- Correlation Heatmap -->
+                {% if plots.correlation %}
+                <div class="plot-container">
+                    <h6><i class="fas fa-fire me-2"></i>Feature Correlation Analysis</h6>
+                    <p class="text-muted">Shows relationships between numeric variables. Strong correlations (near +1 or -1) indicate related features.</p>
+                    <img src="data:image/png;base64,{{ plots.correlation }}" class="img-fluid" alt="Correlation Heatmap">
+                </div>
+                {% endif %}
+                
+                <!-- Data Quality Summary -->
+                {% if plots.data_quality %}
+                <div class="plot-container">
+                    <h6><i class="fas fa-check-circle me-2"></i>Data Quality Assessment</h6>
+                    <p class="text-muted">Overview of dataset structure, completeness, and quality metrics for ML readiness.</p>
+                    <img src="data:image/png;base64,{{ plots.data_quality }}" class="img-fluid" alt="Data Quality Summary">
+                </div>
+                {% endif %}
+                
+                <!-- Missing Data Analysis -->
+                {% if plots.missing_data %}
+                <div class="plot-container">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Missing Data Analysis</h6>
+                    <p class="text-muted">Identifies missing values patterns. Consider data cleaning or imputation strategies.</p>
+                    <img src="data:image/png;base64,{{ plots.missing_data }}" class="img-fluid" alt="Missing Data Analysis">
+                </div>
+                {% endif %}
+                
+                <!-- Distribution Plots -->
+                <div class="row">
+                    {% for key, plot in plots.items() %}
+                        {% if key.startswith('dist_') %}
+                        <div class="col-lg-6 mb-4">
+                            <div class="plot-container">
+                                <h6><i class="fas fa-chart-bar me-2"></i>Feature Distribution & Outliers</h6>
+                                <p class="text-muted">Histogram shows data distribution; box plot reveals outliers and quartiles.</p>
+                                <img src="data:image/png;base64,{{ plot }}" class="img-fluid" alt="Distribution Plot">
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <!-- Categorical Analysis -->
+                <div class="row">
+                    {% for key, plot in plots.items() %}
+                        {% if key.startswith('categorical_') %}
+                        <div class="col-lg-6 mb-4">
+                            <div class="plot-container">
+                                <h6><i class="fas fa-tags me-2"></i>Categorical Data Analysis</h6>
+                                <p class="text-muted">Category distribution helps understand class balance and data variety.</p>
+                                <img src="data:image/png;base64,{{ plot }}" class="img-fluid" alt="Categorical Analysis">
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <!-- ML Insights -->
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Machine Learning Insights:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Correlation Analysis:</strong> Highly correlated features (>0.8) may cause multicollinearity</li>
+                        <li><strong>Distribution Shape:</strong> Skewed data might benefit from normalization/transformation</li>
+                        <li><strong>Missing Data:</strong> Consider imputation strategies or feature removal for columns with >20% missing</li>
+                        <li><strong>Outliers:</strong> May need treatment depending on your use case and model choice</li>
+                        <li><strong>Class Balance:</strong> Imbalanced categories might require sampling techniques</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Data Preview -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-eye me-2"></i>Data Preview (First 10 Rows)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {{ data_preview | safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function trainModel() {
+    const form = document.getElementById('trainForm');
+    const formData = new FormData(form);
+    
+    // Validate form with specific field checking
+    if (!formData.get('model_name')) {
+        alert('Please enter a model name');
+        return;
+    }
+    if (!formData.get('model_type')) {
+        alert('Please select a model type');
+        return;
+    }
+    if (!formData.get('target_column')) {
+        alert('Please select a target column');
+        return;
+    }
+    
+    // Show progress
+    document.getElementById('trainingProgress').classList.remove('d-none');
+    document.getElementById('trainingResult').classList.add('d-none');
+    
+    // Prepare data
+    const data = {
+        dataset_id: parseInt(formData.get('dataset_id')),
+        model_name: formData.get('model_name'),
+        model_type: formData.get('model_type'),
+        target_column: formData.get('target_column')
+    };
+    
+    // Send request
+    fetch('/train_model', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('trainingProgress').classList.add('d-none');
+        
+        if (data.success) {
+            // Show basic message
+            document.getElementById('resultMessage').innerHTML = 
+                `<strong>${data.explanation.interpretation}</strong>`;
+            
+            // Show detailed explanation
+            const detailedHTML = `
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>📋 What This Model Does:</h6>
+                        <ul class="mb-2">
+                            <li><strong>Task:</strong> ${data.explanation.task}</li>
+                            <li><strong>Target:</strong> ${data.explanation.target}</li>
+                            <li><strong>Algorithm:</strong> ${data.explanation.metric_name}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>📊 Performance Metrics:</h6>
+                        <ul class="mb-2">
+                            ${Object.entries(data.explanation.additional_metrics).map(([key, value]) => 
+                                `<li><strong>${key}:</strong> ${value}</li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <h6>💡 What This Means:</h6>
+                    <p><strong>${data.explanation.metric_meaning}</strong></p>
+                    ${data.explanation.example ? `<p><em>Example: ${data.explanation.example}</em></p>` : ''}
+                    ${data.explanation.classes_info ? `<p><strong>Classes:</strong> ${data.explanation.classes_info}</p>` : ''}
+                </div>
+            `;
+            
+            document.getElementById('detailedResults').innerHTML = detailedHTML;
+            document.getElementById('trainingResult').classList.remove('d-none');
+        } else {
+            alert('Error training model: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        document.getElementById('trainingProgress').classList.add('d-none');
+        alert('Error training model: ' + error.message);
+    });
+}
+</script>
+{% endblock %}

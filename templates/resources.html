@@ -1,0 +1,889 @@
+{% extends "base.html" %}
+
+{% block title %}ML Resources & Learning Guide{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center hero-section">
+                <h1 class="display-3 fw-bold text-white mb-3 holographic">
+                    <i class="fas fa-graduation-cap me-3"></i>Machine Learning Resources
+                </h1>
+                <p class="lead text-light fs-4">
+                    Master the art of Machine Learning with our comprehensive guide to algorithms, techniques, and best practices.
+                </p>
+                <div class="mt-4">
+                    <span class="badge bg-primary fs-6 me-2">📚 Learn</span>
+                    <span class="badge bg-success fs-6 me-2">🧠 Understand</span>
+                    <span class="badge bg-warning fs-6 me-2">🚀 Apply</span>
+                    <span class="badge bg-info fs-6">📈 Master</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card glass">
+                <div class="card-body">
+                    <h5 class="text-center mb-3"><i class="fas fa-compass me-2"></i>Quick Navigation</h5>
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <a href="#supervised" class="btn btn-outline-primary btn-sm">Supervised Learning</a>
+                        <a href="#unsupervised" class="btn btn-outline-success btn-sm">Unsupervised Learning</a>
+                        <a href="#algorithms" class="btn btn-outline-info btn-sm">Algorithms Guide</a>
+                        <a href="#metrics" class="btn btn-outline-warning btn-sm">Evaluation Metrics</a>
+                        <a href="#preprocessing" class="btn btn-outline-danger btn-sm">Data Preprocessing</a>
+                        <a href="#best-practices" class="btn btn-outline-secondary btn-sm">Best Practices</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Path Overview -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-map me-2"></i>Learning Path Overview</h2>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="learning-step">
+                        <div class="step-number">1</div>
+                        <h5>Fundamentals</h5>
+                        <p>Understanding data types, problem categories, and basic concepts.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="learning-step">
+                        <div class="step-number">2</div>
+                        <h5>Data Preparation</h5>
+                        <p>Cleaning, preprocessing, and feature engineering techniques.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="learning-step">
+                        <div class="step-number">3</div>
+                        <h5>Model Selection</h5>
+                        <p>Choosing the right algorithm for your specific problem.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="learning-step">
+                        <div class="step-number">4</div>
+                        <h5>Evaluation</h5>
+                        <p>Measuring performance and interpreting results.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supervised Learning Section -->
+    <div id="supervised" class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-chalkboard-teacher me-2"></i>Supervised Learning</h2>
+            <div class="row">
+                <!-- Classification -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card algorithm-card">
+                        <div class="card-header bg-primary">
+                            <h4 class="mb-0"><i class="fas fa-tags me-2"></i>Classification</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Predicting categories or classes from your data.</p>
+                            
+                            <h6><i class="fas fa-robot me-2"></i>Popular Algorithms:</h6>
+                            
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-primary">🌳 Random Forest Classifier</h6>
+                                <p><strong>Best for:</strong> General-purpose classification, handling mixed data types</p>
+                                <p><strong>Strengths:</strong> Robust, handles overfitting well, provides feature importance</p>
+                                <p><strong>Use cases:</strong> Customer segmentation, fraud detection, image classification</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-success">📊 Logistic Regression</h6>
+                                <p><strong>Best for:</strong> Binary classification, probability estimation</p>
+                                <p><strong>Strengths:</strong> Fast, interpretable, works well with linear relationships</p>
+                                <p><strong>Use cases:</strong> Email spam detection, medical diagnosis, marketing response</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-info">🎯 Support Vector Machine (SVM)</h6>
+                                <p><strong>Best for:</strong> High-dimensional data, text classification</p>
+                                <p><strong>Strengths:</strong> Effective in high dimensions, memory efficient</p>
+                                <p><strong>Use cases:</strong> Text classification, image recognition, gene classification</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-warning">👥 K-Nearest Neighbors (KNN)</h6>
+                                <p><strong>Best for:</strong> Simple classification, recommendation systems</p>
+                                <p><strong>Strengths:</strong> Simple to understand, no assumptions about data</p>
+                                <p><strong>Use cases:</strong> Recommendation engines, pattern recognition, outlier detection</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" style="width: 25%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regression -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card algorithm-card">
+                        <div class="card-header bg-success">
+                            <h4 class="mb-0"><i class="fas fa-chart-line me-2"></i>Regression</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Predicting continuous numerical values.</p>
+                            
+                            <h6><i class="fas fa-robot me-2"></i>Popular Algorithms:</h6>
+                            
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-primary">📈 Linear Regression</h6>
+                                <p><strong>Best for:</strong> Simple relationships, baseline models</p>
+                                <p><strong>Strengths:</strong> Fast, interpretable, no hyperparameters to tune</p>
+                                <p><strong>Use cases:</strong> Price prediction, sales forecasting, trend analysis</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-success">🌲 Random Forest Regressor</h6>
+                                <p><strong>Best for:</strong> Complex patterns, non-linear relationships</p>
+                                <p><strong>Strengths:</strong> Handles complexity well, provides feature importance</p>
+                                <p><strong>Use cases:</strong> Real estate pricing, stock prediction, demand forecasting</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-info">🎯 Support Vector Regression (SVR)</h6>
+                                <p><strong>Best for:</strong> Non-linear patterns, robust predictions</p>
+                                <p><strong>Strengths:</strong> Handles outliers well, works in high dimensions</p>
+                                <p><strong>Use cases:</strong> Financial modeling, engineering applications</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-warning">🌿 Decision Tree Regressor</h6>
+                                <p><strong>Best for:</strong> Rule extraction, interpretable models</p>
+                                <p><strong>Strengths:</strong> Easy to understand and visualize</p>
+                                <p><strong>Use cases:</strong> Risk assessment, rule-based predictions</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unsupervised Learning Section -->
+    <div id="unsupervised" class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-search me-2"></i>Unsupervised Learning</h2>
+            <p class="text-light mb-4">
+                Discover hidden patterns and structures in your data without labeled examples. Perfect for exploratory analysis and finding insights you didn't know existed.
+            </p>
+            <div class="row">
+                <!-- Clustering -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card algorithm-card">
+                        <div class="card-header bg-success">
+                            <h4 class="mb-0"><i class="fas fa-layer-group me-2"></i>Clustering</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Group similar data points together to discover natural segments in your data.</p>
+                            
+                            <h6><i class="fas fa-robot me-2"></i>Popular Algorithms:</h6>
+                            
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-primary">🎯 K-Means Clustering</h6>
+                                <p><strong>Best for:</strong> Spherical clusters, customer segmentation</p>
+                                <p><strong>Strengths:</strong> Fast, simple, works well with globular clusters</p>
+                                <p><strong>Use cases:</strong> Market segmentation, image compression, data compression</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" style="width: 40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-success">🌊 DBSCAN</h6>
+                                <p><strong>Best for:</strong> Irregular shaped clusters, outlier detection</p>
+                                <p><strong>Strengths:</strong> Finds arbitrary shaped clusters, robust to outliers</p>
+                                <p><strong>Use cases:</strong> Anomaly detection, geographic data analysis, image processing</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-info">🔗 Hierarchical Clustering</h6>
+                                <p><strong>Best for:</strong> Understanding cluster relationships, dendrograms</p>
+                                <p><strong>Strengths:</strong> No need to specify cluster count, creates hierarchy</p>
+                                <p><strong>Use cases:</strong> Taxonomy creation, gene analysis, social network analysis</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-warning">🎨 Gaussian Mixture Models (GMM)</h6>
+                                <p><strong>Best for:</strong> Soft clustering, overlapping clusters</p>
+                                <p><strong>Strengths:</strong> Provides probability of cluster membership</p>
+                                <p><strong>Use cases:</strong> Density estimation, dimensionality reduction, data generation</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dimensionality Reduction -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card algorithm-card">
+                        <div class="card-header bg-info">
+                            <h4 class="mb-0"><i class="fas fa-compress me-2"></i>Dimensionality Reduction</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Reduce the number of features while preserving important information.</p>
+                            
+                            <h6><i class="fas fa-robot me-2"></i>Popular Algorithms:</h6>
+                            
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-primary">📊 Principal Component Analysis (PCA)</h6>
+                                <p><strong>Best for:</strong> Linear dimensionality reduction, data visualization</p>
+                                <p><strong>Strengths:</strong> Removes correlation, preserves variance</p>
+                                <p><strong>Use cases:</strong> Data visualization, feature extraction, noise reduction</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-success">🗺️ t-SNE</h6>
+                                <p><strong>Best for:</strong> Non-linear visualization, complex patterns</p>
+                                <p><strong>Strengths:</strong> Excellent for visualization, preserves local structure</p>
+                                <p><strong>Use cases:</strong> Data visualization, exploratory analysis, image analysis</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-info">🌐 UMAP</h6>
+                                <p><strong>Best for:</strong> Fast non-linear reduction, preserving global structure</p>
+                                <p><strong>Strengths:</strong> Faster than t-SNE, preserves both local and global structure</p>
+                                <p><strong>Use cases:</strong> Large dataset visualization, preprocessing for ML</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="algorithm-item mb-3">
+                                <h6 class="text-warning">📈 Linear Discriminant Analysis (LDA)</h6>
+                                <p><strong>Best for:</strong> Supervised dimensionality reduction, class separation</p>
+                                <p><strong>Strengths:</strong> Maximizes class separability</p>
+                                <p><strong>Use cases:</strong> Feature extraction for classification, data visualization</p>
+                                <div class="complexity-bar">
+                                    <small>Complexity: </small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 55%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Association Rules -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card algorithm-card">
+                        <div class="card-header bg-warning">
+                            <h4 class="mb-0"><i class="fas fa-link me-2"></i>Association Rule Learning</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Discover relationships between different items or events in your data.</p>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="algorithm-item mb-3">
+                                        <h6 class="text-primary">🛒 Market Basket Analysis</h6>
+                                        <p><strong>Best for:</strong> Finding item associations, recommendation systems</p>
+                                        <p><strong>Strengths:</strong> Intuitive results, actionable insights</p>
+                                        <p><strong>Use cases:</strong> E-commerce recommendations, cross-selling, inventory planning</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="algorithm-item mb-3">
+                                        <h6 class="text-success">🔍 Apriori Algorithm</h6>
+                                        <p><strong>Best for:</strong> Frequent itemset mining, rule generation</p>
+                                        <p><strong>Strengths:</strong> Well-established, interpretable rules</p>
+                                        <p><strong>Use cases:</strong> Web usage patterns, protein sequences, market analysis</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-lightbulb me-2"></i>Key Metrics for Association Rules:</h6>
+                                <ul class="mb-0">
+                                    <li><strong>Support:</strong> How frequently the itemset appears</li>
+                                    <li><strong>Confidence:</strong> How often the rule has been found to be true</li>
+                                    <li><strong>Lift:</strong> How much more likely item B is purchased when item A is purchased</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- When to Use Unsupervised Learning -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card glass">
+                        <div class="card-body p-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-question-circle me-2"></i>When to Use Unsupervised Learning?
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="text-center p-3 rounded bg-success bg-opacity-10">
+                                        <i class="fas fa-search fa-2x text-success mb-2"></i>
+                                        <h6 class="text-success">Exploratory Analysis</h6>
+                                        <p class="text-white-50 small">When you want to understand your data structure</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="text-center p-3 rounded bg-info bg-opacity-10">
+                                        <i class="fas fa-users fa-2x text-info mb-2"></i>
+                                        <h6 class="text-info">Customer Segmentation</h6>
+                                        <p class="text-white-50 small">Group customers based on behavior patterns</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="text-center p-3 rounded bg-warning bg-opacity-10">
+                                        <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                                        <h6 class="text-warning">Anomaly Detection</h6>
+                                        <p class="text-white-50 small">Find unusual patterns or outliers in data</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="text-center p-3 rounded bg-primary bg-opacity-10">
+                                        <i class="fas fa-chart-pie fa-2x text-primary mb-2"></i>
+                                        <h6 class="text-primary">Data Preprocessing</h6>
+                                        <p class="text-white-50 small">Reduce dimensions before supervised learning</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="text-center p-3 rounded bg-secondary bg-opacity-10">
+                                        <i class="fas fa-eye fa-2x text-secondary mb-2"></i>
+                                        <h6 class="text-secondary">Data Visualization</h6>
+                                        <p class="text-white-50 small">Create meaningful visual representations</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evaluation Metrics Section -->
+    <div id="metrics" class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-ruler me-2"></i>Evaluation Metrics Guide</h2>
+            <div class="row">
+                <!-- Classification Metrics -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card metrics-card">
+                        <div class="card-header bg-info">
+                            <h4 class="mb-0"><i class="fas fa-bullseye me-2"></i>Classification Metrics</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="metric-item mb-3">
+                                <h6 class="text-primary">🎯 Accuracy</h6>
+                                <p><strong>What it measures:</strong> Overall correctness of predictions</p>
+                                <p><strong>Formula:</strong> (True Positives + True Negatives) / Total Predictions</p>
+                                <p><strong>When to use:</strong> Balanced datasets, when all classes are equally important</p>
+                                <div class="alert alert-warning p-2">
+                                    <small><strong>⚠️ Caution:</strong> Can be misleading with imbalanced datasets</small>
+                                </div>
+                            </div>
+
+                            <div class="metric-item mb-3">
+                                <h6 class="text-success">🔍 Precision</h6>
+                                <p><strong>What it measures:</strong> How many positive predictions were actually correct</p>
+                                <p><strong>Formula:</strong> True Positives / (True Positives + False Positives)</p>
+                                <p><strong>When to use:</strong> When false positives are costly (e.g., spam detection)</p>
+                            </div>
+
+                            <div class="metric-item mb-3">
+                                <h6 class="text-info">🎣 Recall (Sensitivity)</h6>
+                                <p><strong>What it measures:</strong> How many actual positives were correctly identified</p>
+                                <p><strong>Formula:</strong> True Positives / (True Positives + False Negatives)</p>
+                                <p><strong>When to use:</strong> When false negatives are costly (e.g., medical diagnosis)</p>
+                            </div>
+
+                            <div class="metric-item mb-3">
+                                <h6 class="text-warning">⚖️ F1-Score</h6>
+                                <p><strong>What it measures:</strong> Harmonic mean of precision and recall</p>
+                                <p><strong>Formula:</strong> 2 × (Precision × Recall) / (Precision + Recall)</p>
+                                <p><strong>When to use:</strong> When you need balance between precision and recall</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regression Metrics -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card metrics-card">
+                        <div class="card-header bg-warning">
+                            <h4 class="mb-0"><i class="fas fa-chart-area me-2"></i>Regression Metrics</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="metric-item mb-3">
+                                <h6 class="text-primary">📊 R² Score (R-squared)</h6>
+                                <p><strong>What it measures:</strong> Proportion of variance explained by the model</p>
+                                <p><strong>Range:</strong> 0 to 1 (higher is better)</p>
+                                <p><strong>Interpretation:</strong> 0.8 means model explains 80% of the variance</p>
+                                <div class="alert alert-info p-2">
+                                    <small><strong>💡 Tip:</strong> Good baseline metric for regression models</small>
+                                </div>
+                            </div>
+
+                            <div class="metric-item mb-3">
+                                <h6 class="text-success">📏 Mean Absolute Error (MAE)</h6>
+                                <p><strong>What it measures:</strong> Average absolute difference between predictions and actual values</p>
+                                <p><strong>Units:</strong> Same as your target variable</p>
+                                <p><strong>When to use:</strong> When you want easy-to-interpret error measurements</p>
+                            </div>
+
+                            <div class="metric-item mb-3">
+                                <h6 class="text-info">📐 Root Mean Square Error (RMSE)</h6>
+                                <p><strong>What it measures:</strong> Square root of average squared differences</p>
+                                <p><strong>Characteristics:</strong> Penalizes large errors more than MAE</p>
+                                <p><strong>When to use:</strong> When large errors are particularly undesirable</p>
+                            </div>
+
+                            <div class="metric-item mb-3">
+                                <h6 class="text-warning">🎯 Mean Squared Error (MSE)</h6>
+                                <p><strong>What it measures:</strong> Average of squared differences</p>
+                                <p><strong>Characteristics:</strong> Always positive, heavily penalizes outliers</p>
+                                <p><strong>When to use:</strong> Mathematical optimization (used in training)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Preprocessing Section -->
+    <div id="preprocessing" class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-tools me-2"></i>Data Preprocessing Essentials</h2>
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="card preprocessing-card">
+                        <div class="card-header bg-danger">
+                            <h5 class="mb-0"><i class="fas fa-broom me-2"></i>Data Cleaning</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>🧹 Missing Values</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Drop:</strong> Remove rows/columns with missing data</li>
+                                <li><strong>Fill Mean/Median:</strong> For numerical data</li>
+                                <li><strong>Fill Mode:</strong> For categorical data</li>
+                                <li><strong>Forward/Backward Fill:</strong> For time series</li>
+                            </ul>
+
+                            <h6 class="mt-3">🎯 Outlier Detection</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>IQR Method:</strong> Values beyond 1.5×IQR</li>
+                                <li><strong>Z-Score:</strong> Values beyond 3 standard deviations</li>
+                                <li><strong>Domain Knowledge:</strong> Business logic validation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="card preprocessing-card">
+                        <div class="card-header bg-success">
+                            <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Data Transformation</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>📊 Feature Scaling</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>StandardScaler:</strong> Mean=0, Std=1</li>
+                                <li><strong>MinMaxScaler:</strong> Scale to [0,1] range</li>
+                                <li><strong>RobustScaler:</strong> Uses median, less affected by outliers</li>
+                            </ul>
+
+                            <h6 class="mt-3">🏷️ Encoding</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>One-Hot:</strong> For nominal categories</li>
+                                <li><strong>Label:</strong> For ordinal categories</li>
+                                <li><strong>Target:</strong> For high cardinality features</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="card preprocessing-card">
+                        <div class="card-header bg-warning">
+                            <h5 class="mb-0"><i class="fas fa-magic me-2"></i>Feature Engineering</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>🔧 Creation Techniques</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Polynomial:</strong> x², x³, interactions</li>
+                                <li><strong>Binning:</strong> Convert continuous to categorical</li>
+                                <li><strong>Date Features:</strong> Day, month, quarter, holidays</li>
+                                <li><strong>Text Features:</strong> Length, word count, sentiment</li>
+                            </ul>
+
+                            <h6 class="mt-3">✂️ Selection Methods</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Correlation:</strong> Remove highly correlated features</li>
+                                <li><strong>Importance:</strong> Keep top-performing features</li>
+                                <li><strong>Recursive:</strong> Iteratively remove features</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Best Practices Section -->
+    <div id="best-practices" class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-star me-2"></i>Best Practices & Tips</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card best-practices-card">
+                        <div class="card-header bg-primary">
+                            <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Model Development</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="practice-item mb-3">
+                                <h6><i class="fas fa-check-circle text-success me-2"></i>Start Simple</h6>
+                                <p>Begin with simple models like Linear Regression or Logistic Regression to establish baselines.</p>
+                            </div>
+                            
+                            <div class="practice-item mb-3">
+                                <h6><i class="fas fa-check-circle text-success me-2"></i>Cross-Validation</h6>
+                                <p>Always use cross-validation to get reliable performance estimates and avoid overfitting.</p>
+                            </div>
+                            
+                            <div class="practice-item mb-3">
+                                <h6><i class="fas fa-check-circle text-success me-2"></i>Feature Importance</h6>
+                                <p>Understand which features drive your model's predictions for better interpretability.</p>
+                            </div>
+                            
+                            <div class="practice-item mb-3">
+                                <h6><i class="fas fa-check-circle text-success me-2"></i>Data Quality First</h6>
+                                <p>Spend time on data cleaning and preprocessing - it's often more important than algorithm choice.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="card best-practices-card">
+                        <div class="card-header bg-info">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Common Pitfalls</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="pitfall-item mb-3">
+                                <h6><i class="fas fa-times-circle text-danger me-2"></i>Data Leakage</h6>
+                                <p>Avoid using future information to predict the past. Check for features that shouldn't be available at prediction time.</p>
+                            </div>
+                            
+                            <div class="pitfall-item mb-3">
+                                <h6><i class="fas fa-times-circle text-danger me-2"></i>Overfitting</h6>
+                                <p>When your model performs much better on training data than test data. Use cross-validation and regularization.</p>
+                            </div>
+                            
+                            <div class="pitfall-item mb-3">
+                                <h6><i class="fas fa-times-circle text-danger me-2"></i>Ignoring Class Imbalance</h6>
+                                <p>When some classes are much more frequent than others. Use appropriate metrics and sampling techniques.</p>
+                            </div>
+                            
+                            <div class="pitfall-item mb-3">
+                                <h6><i class="fas fa-times-circle text-danger me-2"></i>Not Validating Assumptions</h6>
+                                <p>Each algorithm has assumptions. Verify that your data meets these requirements for optimal performance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- When to Use What Guide -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-question-circle me-2"></i>When to Use What?</h2>
+            <div class="card decision-tree-card">
+                <div class="card-body">
+                    <div class="decision-flow">
+                        <div class="decision-node start">
+                            <h5>What type of problem?</h5>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="decision-branch">
+                                    <h6 class="text-primary">🏷️ Classification (Predicting Categories)</h6>
+                                    <div class="ms-3">
+                                        <p><strong>Small Dataset (&lt;1000 rows):</strong> Logistic Regression, KNN</p>
+                                        <p><strong>Medium Dataset (1000-10,000):</strong> Random Forest, SVM</p>
+                                        <p><strong>Large Dataset (&gt;10,000):</strong> Random Forest, Gradient Boosting</p>
+                                        <p><strong>Text Data:</strong> SVM, Naive Bayes</p>
+                                        <p><strong>Need Interpretability:</strong> Logistic Regression, Decision Tree</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="decision-branch">
+                                    <h6 class="text-success">📈 Regression (Predicting Numbers)</h6>
+                                    <div class="ms-3">
+                                        <p><strong>Linear Relationship:</strong> Linear Regression</p>
+                                        <p><strong>Non-linear Patterns:</strong> Random Forest, SVR</p>
+                                        <p><strong>Small Dataset:</strong> Linear/Polynomial Regression</p>
+                                        <p><strong>Large Dataset:</strong> Random Forest, Gradient Boosting</p>
+                                        <p><strong>Need Speed:</strong> Linear Regression</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Practical Tips Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4"><i class="fas fa-rocket me-2"></i>Getting Started Tips</h2>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="tip-card">
+                        <div class="tip-icon">1️⃣</div>
+                        <h5>Understand Your Data</h5>
+                        <p>Explore your dataset thoroughly. Look at distributions, correlations, and missing values before choosing an algorithm.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="tip-card">
+                        <div class="tip-icon">2️⃣</div>
+                        <h5>Define Success Metrics</h5>
+                        <p>Decide what "good performance" means for your specific problem before you start training models.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="tip-card">
+                        <div class="tip-icon">3️⃣</div>
+                        <h5>Iterate and Improve</h5>
+                        <p>ML is iterative. Start simple, measure performance, then gradually add complexity where needed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Learning Resources Specific Styles */
+.hero-section {
+    background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+    border-radius: 20px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+}
+
+.learning-step {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.learning-step:hover {
+    transform: translateY(-5px);
+}
+
+.step-number {
+    background: linear-gradient(45deg, #ff006e, #fb5607);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.algorithm-card, .metrics-card, .preprocessing-card, .best-practices-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.algorithm-card:hover, .metrics-card:hover, .preprocessing-card:hover, .best-practices-card:hover {
+    transform: translateY(-3px);
+}
+
+.algorithm-item, .metric-item, .practice-item, .pitfall-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 3px solid var(--bs-primary);
+}
+
+.complexity-bar .progress {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.decision-tree-card {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(40, 167, 69, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.decision-node {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 300px;
+}
+
+.decision-branch {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.tip-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+}
+
+.tip-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    
+    .learning-step {
+        margin-bottom: 1rem;
+    }
+    
+    .tip-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
