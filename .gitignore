@@ -74,8 +74,8 @@ Thumbs.db
 instance/
 .webassets-cache
 
-# Database files (optional - you might want to keep users.db for demo)
-# users.db
+# Database files (contains sensitive user data - should NOT be in version control)
+users.db
 
 # Uploaded files (optional - exclude user uploads for privacy)
 uploads/*
